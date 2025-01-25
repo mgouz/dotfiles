@@ -1,0 +1,24 @@
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[user]
+	name = Matthew Gouzoulis
+	email = mattgouzoulis@gmail.com
+[alias]
+	s = status
+	d = diff
+	co = checkout
+	br = branch
+	last = log -1 HEAD
+	cane = commit --amend --no-edit
+	pr = pull --rebase
+	lo = log --oneline -n 10
+	lg = log --oneline --graph
+	st = status -s
+	ci = commit -v
+[init]
+	defaultBranch = main
+[color]
+	ui = auto
