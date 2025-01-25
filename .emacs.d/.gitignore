@@ -1,0 +1,22 @@
+projects
+.DS_STORE
+/eln-cache/
+dape-breakpoints
+ielm-history.eld
+projectile.cache
+/url/
+/auto-save-list/
+org-roam.db
+/transient/
+
+# Eshell stuff
+/eshell/history
+/eshell/lastdir
+
+# elpa packages
+/elpa/
+
+# ignore auto save files
+\#*
+.\#*
+*\~
