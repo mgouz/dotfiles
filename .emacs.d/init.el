@@ -76,9 +76,14 @@
   (scroll-bar-mode 0) ; ;remove scroll bar
   (global-set-key (kbd "s-b") 'treemacs) ; Mimic VSCode's file explorer
 
+  (setq inhibit-startup-message t)
+  (set-fringe-mode 10)
+  (setq visible-bell nil)
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
 
   (electric-pair-mode t) ;; Matching parentheses
-  (global-display-line-numbers-mode t)
+  ;; (global-display-line-numbers-mode t)
   (setq ispell-program-name "aspell")
 
   ;; Make Flymake run in all programming buffers
@@ -91,11 +96,16 @@
   (add-to-list 'auto-mode-alist '("\\.yml$'" . yaml-ts-mode))
 
   ;; PDF View does not play nice with display-line-numbers-mode
-  (add-hook 'pdf-view-mode-hook 'display-line-numbers-mode)
+  (dolist (mode '(text-mode-hook
+                prog-mode-hook
+                conf-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 1))))
+
+  ;; (add-hook 'pdf-view-mode-hook 'display-line-numbers-mode)
 
 
   ;; Used for getting rid of the top window bar
-  ;; (add-to-list 'default-frame-alist '(undecorated . t))
+  (add-to-list 'default-frame-alist '(undecorated . t))
   (which-key-mode)
 
 
@@ -143,7 +153,8 @@
 	(yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
 (use-package vterm
-  :load-path  "~/.config/emacs/emacs-libvterm/")
+  :ensure t
+  :load-path  (concat user-emacs-directory "emacs-libvterm"))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -161,8 +172,9 @@
    '(all-the-icons cape corfu dape diff-hl doom-modeline doom-themes
 		   embark-consult evil-collection evil-nerd-commenter
 		   evil-snipe evil-surround magit marginalia orderless
-		   org-roam perspective quickrun treemacs-evil
-		   treemacs-projectile vertico yasnippet-snippets)))
+		   org-roam pdf-tools perspective quickrun
+		   simple-httpd treemacs-evil treemacs-projectile
+		   vertico yasnippet-snippets)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
