@@ -140,7 +140,6 @@ export MANPAGER="sh -c 'col -bx | bat -l  man -p'"
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 # [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 alias v=nvim
 alias python=python3.13
@@ -161,6 +160,8 @@ export PATH="/Library/Developer/CommandLineTools/usr/bin/:$PATH"
 export PATH="$HOME/.config/emacs-configs/doom/bin:$PATH"
 export DOOMDIR="$HOME/.doom.d"
 
+
+source <(fzf --zsh)
 
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
