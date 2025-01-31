@@ -18,6 +18,57 @@
 
 (require 'use-package)
 
+(add-to-list 'load-path "/opt/homebrew/Cellar/mu/1.12.8/share/emacs/site-lisp/mu/mu4e")
+(require 'mu4e)
+;; use mu4e for e-mail in emacs
+(setq mail-user-agent 'mu4e-user-agent)
+(setq mu4e-drafts-folder "/[Gmail].Drafts")
+(setq mu4e-sent-folder   "/[Gmail].Sent Mail")
+(setq mu4e-trash-folder  "/[Gmail].Trash")
+
+
+;; don't save message to Sent Messages, Gmail/IMAP takes care of this
+(setq mu4e-sent-messages-behavior 'delete)
+
+;; (See the documentation for `mu4e-sent-messages-behavrio` if you have
+;; additional non-Gmail addresses and want to assign them different behavior
+;; )
+
+(setq mu4e-maildir-shortcuts
+    '( (:maildir "/INBOX"              :key ?i)
+       (:maildir "/[Gmail].Sent Mail"  :key ?s)
+       (:maildir "/[Gmail].Trash"      :key ?t)
+       (:maildir "/[Gmail].All Mail"   :key ?a)))
+
+(add-to-list 'mu4e-bookmarks
+    ;; ':favorite t' i.e. use this one for the modeline
+    '(:query "maildir:/inbox" :name "Inbox" :key ?i :favorite t))
+
+;; allow for updating mail using U in the main view:
+(setq mu4e-get-mail-command "offlineimap")
+
+;; something about ourselves
+(setq user-mail-address "mattgouzoulis@gmail.com"
+      user-full-name "Matthew Gouozulis"
+      message-signature
+      (concat "Best regards,\n"
+	      "Matthew Gouzoulis"))
+
+;; sending mail -- replace USERNAME with your gmail username
+;; also, make sure the gnutls command line utils are installed
+(require 'smtpmail)
+(setq message-send-mail-function 'smtpmail-send-it
+      starttls-use-gnutls t
+      smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+      smtpmail-auth-credentials
+      '(("smtp.gmail.com" 587 "mattgouzoulis@gmail.com" nil))
+      smtpmail-default-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-service 587)
+
+(setq message-kill-buffer-on-exit t)
+
+
 (load-file "~/.config/emacs/modules/ui.el")
 (load-file "~/.config/emacs/modules/evil.el")
 (load-file "~/.config/emacs/modules/wip.el") 
@@ -154,7 +205,7 @@
 
 (use-package vterm
   :ensure t
-  :load-path  (concat user-emacs-directory "emacs-libvterm"))
+  :load-path   "~/.emacs.d/emacs-libvterm")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -169,12 +220,12 @@
    '((emacs-lisp . t) (awk . t) (python . t) (js . t) (java . t) (C . t)
      (sqlite . t) (css . t) (lua . t)))
  '(package-selected-packages
-   '(all-the-icons cape corfu dape diff-hl doom-modeline doom-themes
-		   embark-consult evil-collection evil-nerd-commenter
-		   evil-snipe evil-surround magit marginalia orderless
-		   org-roam pdf-tools perspective quickrun
-		   simple-httpd treemacs-evil treemacs-projectile
-		   vertico yasnippet-snippets)))
+   '(all-the-icons calfw cape corfu dape diff-hl doom-modeline
+		   doom-themes embark-consult evil-collection
+		   evil-nerd-commenter evil-snipe evil-surround forge
+		   magit marginalia orderless org-roam pdf-tools
+		   perspective quickrun simple-httpd treemacs-evil
+		   treemacs-projectile vertico yasnippet-snippets)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
