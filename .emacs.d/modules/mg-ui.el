@@ -32,7 +32,7 @@
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
   ;; (load-theme 'doom-1337 t)
   ;; (load-theme 'doom-henna t)
-  (load-theme 'tsdh-light t)
+  (load-theme 'doom-acario-light t)
   ;; Enable flashing mode-line on errors
   ;;(doom-themes-visual-bell-config)
   ;; Enable custom neotree theme (all-the-icons must be installed!)
@@ -42,3 +42,6 @@
   (doom-themes-treemacs-config)
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
+
+(provide 'mg-ui)
+;;; mg-ui.el ends here

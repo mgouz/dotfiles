@@ -77,3 +77,6 @@ targets."
 
 (advice-add #'embark-completing-read-prompter
             :around #'embark-hide-which-key-indicator)
+
+(provide 'mg-wip)
+

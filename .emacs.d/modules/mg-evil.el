@@ -1,15 +1,16 @@
 ;;; -*- lexical-binding: t -*-
 
 
-					; (keymap-unset 'Info-mode (kbd "SPC"))
-					; (keymap-unset 'dired-mode (kbd "SPC"))
-					; (evil-define-keymap)
+; (keymap-unset 'Info-mode (kbd "SPC"))
+; (keymap-unset 'dired-mode (kbd "SPC"))
+; (evil-define-keymap)
 
-					; Download Evil
+; Download Evil
 ;; (defun my-org-insert-item
 ;;     "If we're on a heading, then insert a heading and go into insert mode"
 ;;     (org-insert-item) 
 ;;   )
+
 (use-package evil
   :ensure t ;; install the evil package if not installed
   :config 
@@ -108,10 +109,9 @@
   (evil-set-initial-state 'vterm-mode 'emacs)
   (evil-set-undo-system 'undo-redo)
   (setq evil-want-C-u-scroll t)
-  (setq evil-want-keybinding nil)
 
   :init ;; tweak evil's configuration before loading it
-  
+  (setq evil-want-keybinding nil)
   (evil-mode 1))
 
 ;; (add-hook 'Info-mode-hook (evil-normalize-keymaps))
@@ -177,4 +177,5 @@
   :config 
   (global-set-key (kbd "s-/") 'evilnc-comment-or-uncomment-lines))
 
-;; (provide 'evil-module)
+(provide 'mg-evil)
+;;; evil.el ends here

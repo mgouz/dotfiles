@@ -50,3 +50,8 @@
   ;; (add-hook 'completion-at-point-functions #'cape-history)
   ;; ...
 )
+
+
+(provide 'mg-completion-point)
+
+;;; 

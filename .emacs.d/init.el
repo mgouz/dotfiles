@@ -68,16 +68,24 @@
 
 (setq message-kill-buffer-on-exit t)
 
+;; use 'fancy' non-ascii characters in various places in mu4e
+(setq mu4e-use-fancy-chars t)
 
-(load-file "~/.config/emacs/modules/ui.el")
-(load-file "~/.config/emacs/modules/evil.el")
-(load-file "~/.config/emacs/modules/wip.el") 
-(load-file "~/.config/emacs/modules/git.el") 
-(load-file "~/.config/emacs/modules/completion-minibuffer.el")
-(load-file "~/.config/emacs/modules/completion-point.el")
-(load-file "~/.config/emacs/modules/org.el")
-(load-file "~/.config/emacs/modules/debugging.el")
+;; save attachment to my desktop (this can also be a function)
+(setq mu4e-attachment-dir "~/Desktop")
 
+;; attempt to show images when viewing messages
+(setq mu4e-view-show-images t)
+(add-to-list 'load-path (concat user-emacs-directory "/modules"))
+
+(require 'mg-ui)
+(require 'mg-evil)
+(require 'mg-wip)
+(require 'mg-git)
+(require 'mg-completion-minibuffer)
+(require 'mg-completion-point)
+(require 'mg-org)
+(require 'mg-debugging)
 
 (use-package yasnippet
   :ensure t
@@ -213,7 +221,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("4594d6b9753691142f02e67b8eb0fda7d12f6cc9f1299a49b819312d6addad1d"
+   '("4e2e42e9306813763e2e62f115da71b485458a36e8b4c24e17a2168c45c9cf9d"
+     "4594d6b9753691142f02e67b8eb0fda7d12f6cc9f1299a49b819312d6addad1d"
      "e8bd9bbf6506afca133125b0be48b1f033b1c8647c628652ab7a2fe065c10ef0"
      default))
  '(org-babel-load-languages
