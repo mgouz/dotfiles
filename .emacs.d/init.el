@@ -168,7 +168,19 @@
 
 
   ;; Used for getting rid of the top window bar
-  (add-to-list 'default-frame-alist '(undecorated . t))
+;; Don't get rid of it for Gnu/Linux 
+  (cond 
+	( (equal  system-type  "darwin") (add-to-list 'default-frame-alist '(undecorated . t)) )
+	((equal system-type  "gnu/linux") ())
+  )
+
+  ;; Set font to be bigger in Graphical Emacs on WSL/Linux
+  (if (equal system-type  "gnu/linux")
+      (set-face-attribute 'default nil  :height 1000)
+     (set-default-font "Monaco 14")
+  )
+  
+  
   (which-key-mode)
 
 
@@ -225,19 +237,20 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("4594d6b9753691142f02e67b8eb0fda7d12f6cc9f1299a49b819312d6addad1d"
-     "e8bd9bbf6506afca133125b0be48b1f033b1c8647c628652ab7a2fe065c10ef0"
-     default))
+   '("4594d6b9753691142f02e67b8eb0fda7d12f6cc9f1299a49b819312d6addad1d" "e8bd9bbf6506afca133125b0be48b1f033b1c8647c628652ab7a2fe065c10ef0" default))
  '(elfeed-feeds '("https://osblog.stephenmarz.com/feed.rss"))
  '(org-babel-load-languages
-   '((emacs-lisp . t) (awk . t) (python . t) (js . t) (java . t) (C . t)
-     (sqlite . t) (css . t) (lua . t)))
+   '((emacs-lisp . t)
+     (awk . t)
+     (python . t)
+     (js . t)
+     (java . t)
+     (C . t)
+     (sqlite . t)
+     (css . t)
+     (lua . t)))
  '(package-selected-packages
-   '(all-the-icons cape corfu diff-hl doom-modeline doom-themes elfeed
-		   embark-consult evil-collection evil-nerd-commenter
-		   evil-snipe evil-surround general magit marginalia
-		   orderless org-roam pdf-tools quickrun smartparens
-		   treemacs-evil vertico yasnippet-snippets)))
+   '(all-the-icons cape corfu diff-hl doom-modeline doom-themes elfeed embark-consult evil-collection evil-nerd-commenter evil-snipe evil-surround general magit marginalia orderless org-roam pdf-tools quickrun smartparens treemacs-evil vertico yasnippet-snippets)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
