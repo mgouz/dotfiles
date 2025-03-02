@@ -170,15 +170,15 @@
   ;; Used for getting rid of the top window bar
 ;; Don't get rid of it for Gnu/Linux 
   (cond 
-	( (equal  system-type  "darwin") (add-to-list 'default-frame-alist '(undecorated . t)) )
-	((equal system-type  "gnu/linux") ())
+	((string-equal  system-type  "darwin") (add-to-list 'default-frame-alist '(undecorated . t)) )
+	((string-equal system-type  "gnu/linux") ())
   )
 
   ;; Set font to be bigger in Graphical Emacs on WSL/Linux
-  (if (equal system-type  "gnu/linux")
-      (set-face-attribute 'default nil  :height 1000)
-     (set-default-font "Monaco 14")
-  )
+  ;; (if (equal system-type  "gnu/linux")
+  ;;     (set-face-attribute 'default nil  :height 1000)
+  ;;    (set-default-font "Monaco 14")
+  ;; )
   
   
   (which-key-mode)
