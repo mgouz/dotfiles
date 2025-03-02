@@ -1,5 +1,5 @@
 ;; setq warning-minimum-level :error  ; don't show warning buffer unless error
-; (setq org-directory "~/org/")
+					; (setq org-directory "~/org/")
 (setq org-clock-sound t)
 
 ;; My Init file
@@ -18,7 +18,7 @@
 
 (require 'use-package)
 
-; (add-to-list 'load-path "/opt/homebrew/Cellar/mu/1.12.8/share/emacs/site-lisp/mu/mu4e")
+					; (add-to-list 'load-path "/opt/homebrew/Cellar/mu/1.12.8/share/emacs/site-lisp/mu/mu4e")
 
 
 (when (file-exists-p "/opt/homebrew/Cellar/mu/1.12.8/share/emacs/site-lisp/mu/mu4e")
@@ -79,8 +79,9 @@
 
   ;; attempt to show images when viewing messages
   (setq mu4e-view-show-images t)
-  (add-to-list 'load-path (concat user-emacs-directory "/modules"))
   )
+
+(add-to-list 'load-path (concat user-emacs-directory "/modules"))
 (require 'mg-ui)
 (require 'mg-evil)
 (require 'mg-wip)
@@ -159,9 +160,9 @@
 
   ;; PDF View does not play nice with display-line-numbers-mode
   (dolist (mode '(text-mode-hook
-                prog-mode-hook
-                conf-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 1))))
+                  prog-mode-hook
+                  conf-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 1))))
 
   ;; (add-hook 'pdf-view-mode-hook 'display-line-numbers-mode)
 
