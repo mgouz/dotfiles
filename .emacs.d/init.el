@@ -224,20 +224,19 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("4e2e42e9306813763e2e62f115da71b485458a36e8b4c24e17a2168c45c9cf9d"
-     "4594d6b9753691142f02e67b8eb0fda7d12f6cc9f1299a49b819312d6addad1d"
+   '("4594d6b9753691142f02e67b8eb0fda7d12f6cc9f1299a49b819312d6addad1d"
      "e8bd9bbf6506afca133125b0be48b1f033b1c8647c628652ab7a2fe065c10ef0"
      default))
+ '(elfeed-feeds '("https://osblog.stephenmarz.com/feed.rss"))
  '(org-babel-load-languages
    '((emacs-lisp . t) (awk . t) (python . t) (js . t) (java . t) (C . t)
      (sqlite . t) (css . t) (lua . t)))
  '(package-selected-packages
-   '(all-the-icons calfw cape corfu dape diff-hl doom-modeline
-		   doom-themes embark-consult evil-collection
-		   evil-nerd-commenter evil-snipe evil-surround forge
-		   magit marginalia orderless org-roam pdf-tools
-		   perspective quickrun simple-httpd treemacs-evil
-		   treemacs-projectile vertico yasnippet-snippets)))
+   '(all-the-icons cape corfu diff-hl doom-modeline doom-themes elfeed
+		   embark-consult evil-collection evil-nerd-commenter
+		   evil-snipe evil-surround general magit marginalia
+		   orderless org-roam pdf-tools quickrun smartparens
+		   treemacs-evil vertico yasnippet-snippets)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -247,4 +246,5 @@
 
 
 ;; Setting pkgconf variable for pdf-tools install 
-(setenv "PKG_CONFIG_PATH" "/opt/homebrew/Cellar/poppler/24.12.0/lib/pkgconfig/:/usr/X11/lib:/pkgconfig/usr/local/Cellar/libffi/3.2.1/lib/pkgconfig:/opt/homebrew/Cellar/glib/2.82.4/lib/pkgconfig/:/opt/homebrew/Cellar/cairo/1.18.2/lib/pkgconfig/:/opt/homebrew/Cellar/libpng/1.6.44/lib/pkgconfig/:/opt/homebrew/Cellar/zlib/1.3.1/lib/pkgconfig/zlib.pc")
+(setenv "PKG_CONFIG_PATH" "/opt/homebrew/Cellar/poppler/25.01.0/lib/pkgconfig/:/usr/X11/lib:/pkgconfig/usr/local/Cellar/libffi/3.2.1/lib/pkgconfig:/opt/homebrew/Cellar/glib/2.82.4/lib/pkgconfig/:/opt/homebrew/Cellar/cairo/1.18.2/lib/pkgconfig/:/opt/homebrew/Cellar/libpng/1.6.46/lib/pkgconfig/:/opt/homebrew/Cellar/zlib/1.3.1/lib/pkgconfig/zlib.pc")
+(put 'downcase-region 'disabled nil)
