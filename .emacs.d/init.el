@@ -1,5 +1,5 @@
 ;; setq warning-minimum-level :error  ; don't show warning buffer unless error
-(setq org-directory "~/org/")
+; (setq org-directory "~/org/")
 (setq org-clock-sound t)
 
 ;; My Init file
@@ -18,66 +18,69 @@
 
 (require 'use-package)
 
-(add-to-list 'load-path "/opt/homebrew/Cellar/mu/1.12.8/share/emacs/site-lisp/mu/mu4e")
-(require 'mu4e)
-;; use mu4e for e-mail in emacs
-(setq mail-user-agent 'mu4e-user-agent)
-(setq mu4e-drafts-folder "/[Gmail].Drafts")
-(setq mu4e-sent-folder   "/[Gmail].Sent Mail")
-(setq mu4e-trash-folder  "/[Gmail].Trash")
+; (add-to-list 'load-path "/opt/homebrew/Cellar/mu/1.12.8/share/emacs/site-lisp/mu/mu4e")
 
 
-;; don't save message to Sent Messages, Gmail/IMAP takes care of this
-(setq mu4e-sent-messages-behavior 'delete)
+(when (file-exists-p "/opt/homebrew/Cellar/mu/1.12.8/share/emacs/site-lisp/mu/mu4e")
+  (require 'mu4e)
+  ;; use mu4e for e-mail in emacs
+  (setq mail-user-agent 'mu4e-user-agent)
+  (setq mu4e-drafts-folder "/[Gmail].Drafts")
+  (setq mu4e-sent-folder   "/[Gmail].Sent Mail")
+  (setq mu4e-trash-folder  "/[Gmail].Trash")
 
-;; (See the documentation for `mu4e-sent-messages-behavrio` if you have
-;; additional non-Gmail addresses and want to assign them different behavior
-;; )
 
-(setq mu4e-maildir-shortcuts
-    '( (:maildir "/INBOX"              :key ?i)
-       (:maildir "/[Gmail].Sent Mail"  :key ?s)
-       (:maildir "/[Gmail].Trash"      :key ?t)
-       (:maildir "/[Gmail].All Mail"   :key ?a)))
+  ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
+  (setq mu4e-sent-messages-behavior 'delete)
 
-(add-to-list 'mu4e-bookmarks
-    ;; ':favorite t' i.e. use this one for the modeline
-    '(:query "maildir:/inbox" :name "Inbox" :key ?i :favorite t))
+  ;; (See the documentation for `mu4e-sent-messages-behavrio` if you have
+  ;; additional non-Gmail addresses and want to assign them different behavior
+  ;; )
 
-;; allow for updating mail using U in the main view:
-(setq mu4e-get-mail-command "offlineimap")
+  (setq mu4e-maildir-shortcuts
+	'( (:maildir "/INBOX"              :key ?i)
+	   (:maildir "/[Gmail].Sent Mail"  :key ?s)
+	   (:maildir "/[Gmail].Trash"      :key ?t)
+	   (:maildir "/[Gmail].All Mail"   :key ?a)))
 
-;; something about ourselves
-(setq user-mail-address "mattgouzoulis@gmail.com"
-      user-full-name "Matthew Gouozulis"
-      message-signature
-      (concat "Best regards,\n"
-	      "Matthew Gouzoulis"))
+  (add-to-list 'mu4e-bookmarks
+	       ;; ':favorite t' i.e. use this one for the modeline
+	       '(:query "maildir:/inbox" :name "Inbox" :key ?i :favorite t))
 
-;; sending mail -- replace USERNAME with your gmail username
-;; also, make sure the gnutls command line utils are installed
-(require 'smtpmail)
-(setq message-send-mail-function 'smtpmail-send-it
-      starttls-use-gnutls t
-      smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
-      smtpmail-auth-credentials
-      '(("smtp.gmail.com" 587 "mattgouzoulis@gmail.com" nil))
-      smtpmail-default-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-service 587)
+  ;; allow for updating mail using U in the main view:
+  (setq mu4e-get-mail-command "offlineimap")
 
-(setq message-kill-buffer-on-exit t)
+  ;; something about ourselves
+  (setq user-mail-address "mattgouzoulis@gmail.com"
+	user-full-name "Matthew Gouozulis"
+	message-signature
+	(concat "Best regards,\n"
+		"Matthew Gouzoulis"))
 
-;; use 'fancy' non-ascii characters in various places in mu4e
-(setq mu4e-use-fancy-chars t)
+  ;; sending mail -- replace USERNAME with your gmail username
+  ;; also, make sure the gnutls command line utils are installed
+  (require 'smtpmail)
+  (setq message-send-mail-function 'smtpmail-send-it
+	starttls-use-gnutls t
+	smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+	smtpmail-auth-credentials
+	'(("smtp.gmail.com" 587 "mattgouzoulis@gmail.com" nil))
+	smtpmail-default-smtp-server "smtp.gmail.com"
+	smtpmail-smtp-server "smtp.gmail.com"
+	smtpmail-smtp-service 587)
 
-;; save attachment to my desktop (this can also be a function)
-(setq mu4e-attachment-dir "~/Desktop")
+  (setq message-kill-buffer-on-exit t)
 
-;; attempt to show images when viewing messages
-(setq mu4e-view-show-images t)
-(add-to-list 'load-path (concat user-emacs-directory "/modules"))
+  ;; use 'fancy' non-ascii characters in various places in mu4e
+  (setq mu4e-use-fancy-chars t)
 
+  ;; save attachment to my desktop (this can also be a function)
+  (setq mu4e-attachment-dir "~/Desktop")
+
+  ;; attempt to show images when viewing messages
+  (setq mu4e-view-show-images t)
+  (add-to-list 'load-path (concat user-emacs-directory "/modules"))
+  )
 (require 'mg-ui)
 (require 'mg-evil)
 (require 'mg-wip)
