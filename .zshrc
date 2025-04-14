@@ -77,7 +77,7 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(git direnv)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -89,10 +89,10 @@ source $ZSH/oh-my-zsh.sh
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
+#if [[ -n $SSH_CONNECTION ]]; then
 #   export EDITOR='vim'
 # else
-#   export EDITOR='mvim'
+#   export EDITOR='nvim'
 # fi
 
 # Compilation flags
@@ -109,6 +109,12 @@ alias ohmyzsh="vim ~/.oh-my-zsh"
 alias ls="ls -GF"
 alias grep="rg"
 alias stat="stat -x"
+alias ec="emacsclient -nw"
+alias v="nvim"
+alias vim="nvim"
+alias gcc="/usr/bin/gcc"
+alias as="/usr/bin/as"
+alias ld="/usr/bin/ld"
 
 source ~/.nvm/nvm.sh
 
@@ -152,12 +158,15 @@ export PATH="/usr/local/sbin:$PATH"
 export PATH="/usr/local/bin:$PATH"
 export PATH="/opt/local/bin:$PATH"
 export PATH="/Users/mattgouzoulis/.nvm/versions/node/v20.18.0/bin/:$PATH"
+export PATH="/Users/mattgouzoulis/bin/$PATH"
+
 # export EMACSDIR="~/.config/emacs"
 # export PATH="/Applications/MacPorts/Emacs.app/Contents/MacOS/bin:$PATH"
 
 export PATH="/Users/mattgouzoulis/Library/Python/3.7/bin:$PATH"
 export PATH="/Library/Developer/CommandLineTools/usr/bin/:$PATH"
 export PATH="$HOME/.config/emacs-configs/doom/bin:$PATH"
+export PATH="/run/current-system/sw/bin:$PATH"
 export DOOMDIR="$HOME/.doom.d"
 
 
@@ -171,3 +180,10 @@ source <(fzf --zsh)
 # Created by `pipx` on 2025-01-01 23:23:10
 export PATH="$PATH:/Users/mattgouzoulis/.local/bin"
 export DATABASE_PASSWORD="passwod"
+
+
+export NIX_CONF_DIR=/Users/mattgouzoulis/.config/nix
+export NIXADDR=172.16.221.128
+
+PS1="${PS1//\\u/"$SHLVL:\\u"}"
+

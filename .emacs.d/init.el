@@ -18,7 +18,7 @@
 
 (require 'use-package)
 
-					; (add-to-list 'load-path "/opt/homebrew/Cellar/mu/1.12.8/share/emacs/site-lisp/mu/mu4e")
+; (add-to-list 'load-path "/opt/homebrew/Cellar/mu/1.12.8/share/emacs/site-lisp/mu/mu4e")
 
 
 (when (file-exists-p "/opt/homebrew/Cellar/mu/1.12.8/share/emacs/site-lisp/mu/mu4e")
@@ -83,7 +83,7 @@
 
 (add-to-list 'load-path (concat user-emacs-directory "/modules"))
 (require 'mg-ui)
-(require 'mg-evil)
+;; (require 'mg-evil)
 (require 'mg-wip)
 (require 'mg-git)
 (require 'mg-completion-minibuffer)
@@ -105,7 +105,7 @@
 (use-package emacs
   :custom
   ;; Support opening new minibuffers from inside existing minibuffers.
-  (enable-recursive-minibuffers t)
+
   ;; Hide commands in M-x which do not apply to the current mode.  Corfu
   ;; commands are hidden, since they are not used via M-x. This setting is
   ;; useful beyond Corfu.
@@ -119,7 +119,12 @@
   (keymap-global-set (kbd "s-w") 'tab-close 1)
   (keymap-global-set (kbd "s-[") 'previous-buffer 1)
   (keymap-global-set (kbd "s-]") 'next-buffer 1)
-
+  (global-set-key (kbd "s-/") 'comment-line)
+  (global-set-key (kbd "M-n") 'forward-paragraph)
+  (global-set-key (kbd "M-p") 'backward-paragraph)
+  (global-set-key (kbd "C-x P") 'project-switch-project)
+  (global-set-key (kbd "M-m") 'compile)
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
   ;; Misc key maps
   (global-set-key (kbd "s-P") 'execute-extended-command) ; Mimic VSCode's command pallete
   (global-set-key (kbd "S-s-<return>") 'maximize-window) ; C-w = to balance windows again (a-la iterm2)
@@ -127,6 +132,18 @@
   ;; TODO swap this out for the appropriate formatting function based on mode of the buffer
   (global-set-key (kbd "M-s-l") 'eglot-format) ; C-w = to balance windows again (a-la iterm2)
 
+
+  (global-set-key (kbd "C-x .") 'find-file)
+  (global-set-key (kbd "C-x C-.") 'find-file-other-window)
+  (global-set-key (kbd "C-s-h") 'windmove-left)
+  (global-set-key (kbd "C-s-j") 'windmove-down)
+  (global-set-key (kbd "C-s-k") 'windmove-up)
+  (global-set-key (kbd "C-s-l") 'windmove-right)
+  
+  (global-set-key (kbd "M-#") 'dictionary-lookup-definition)
+  
+  
+ 
   ;; When I press this, I want to follow to a new window
   ;; (global-set-key (kbd "s-<return>") 'ret-new-buffer)
   ;; (global-set-key (kbd "s-<mouse-1>") 'ret-new-buffer)
@@ -138,14 +155,20 @@
   (tool-bar-mode 0) ;; Remove tool bar
   (scroll-bar-mode 0) ; ;remove scroll bar
   (global-set-key (kbd "s-b") 'treemacs) ; Mimic VSCode's file explorer
+  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+  (global-set-key (kbd "C-S-c C-e") 'mc/edit-ends-of-lines)
+  (global-set-key (kbd "C-S-c C-a") 'mc/edit-beginnings-of-lines)
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+  (repeat-mode)
 
   (setq inhibit-startup-message t)
   (set-fringe-mode 10)
   (setq visible-bell nil)
-  (add-to-list 'default-frame-alist '(fullscreen . maximized))
+  ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-
-  (electric-pair-mode t) ;; Matching parentheses
+  
   ;; (global-display-line-numbers-mode t)
   (setq ispell-program-name "aspell")
 
@@ -161,7 +184,8 @@
   ;; PDF View does not play nice with display-line-numbers-mode
   (dolist (mode '(text-mode-hook
                   prog-mode-hook
-                  conf-mode-hook))
+                  conf-mode-hook
+		  emacs-lisp-mode))
     (add-hook mode (lambda () (display-line-numbers-mode 1))))
 
   ;; (add-hook 'pdf-view-mode-hook 'display-line-numbers-mode)
@@ -170,7 +194,7 @@
   ;; Used for getting rid of the top window bar
 ;; Don't get rid of it for Gnu/Linux 
   (cond 
-	((string-equal  system-type  "darwin") (add-to-list 'default-frame-alist '(undecorated . t)) )
+	;; ((string-equal  system-type  "darwin") (add-to-list 'default-frame-alist '(undecorated . t)) )
 	((string-equal system-type  "gnu/linux") ())
   )
 
@@ -187,7 +211,6 @@
   ;; Org-mode Setup
   (setq org-startup-indented t))
 ;; END EMACS Config
-
 
 ;; (add-hook 'prog-mode-hook (lambda () (eglot)))  
 
@@ -215,7 +238,7 @@
 	(cmake "https://github.com/uyha/tree-sitter-cmake")
 	(css "https://github.com/tree-sitter/tree-sitter-css")
 	(elisp "https://github.com/Wilfred/tree-sitter-elisp")
-	(go "https://github.com/tree-sitter/tree-sitter-go")
+	(go . "https://github.com/tree-sitter/tree-sitter-go")
 	(html "https://github.com/tree-sitter/tree-sitter-html")
 	(javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
 	(json "https://github.com/tree-sitter/tree-sitter-json")
@@ -237,20 +260,20 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("4594d6b9753691142f02e67b8eb0fda7d12f6cc9f1299a49b819312d6addad1d" "e8bd9bbf6506afca133125b0be48b1f033b1c8647c628652ab7a2fe065c10ef0" default))
+   '("4594d6b9753691142f02e67b8eb0fda7d12f6cc9f1299a49b819312d6addad1d"
+     "e8bd9bbf6506afca133125b0be48b1f033b1c8647c628652ab7a2fe065c10ef0"
+     default))
  '(elfeed-feeds '("https://osblog.stephenmarz.com/feed.rss"))
  '(org-babel-load-languages
-   '((emacs-lisp . t)
-     (awk . t)
-     (python . t)
-     (js . t)
-     (java . t)
-     (C . t)
-     (sqlite . t)
-     (css . t)
-     (lua . t)))
+   '((emacs-lisp . t) (awk . t) (python . t) (js . t) (java . t) (C . t)
+     (sqlite . t) (css . t) (lua . t)))
  '(package-selected-packages
-   '(all-the-icons cape corfu diff-hl doom-modeline doom-themes elfeed embark-consult evil-collection evil-nerd-commenter evil-snipe evil-surround general magit marginalia orderless org-roam pdf-tools quickrun smartparens treemacs-evil vertico yasnippet-snippets)))
+   '(all-the-icons cape corfu diff-hl doom-modeline doom-themes elfeed
+		   embark-consult evil-collection evil-nerd-commenter
+		   evil-snipe evil-surround general magit marginalia
+		   multiple-cursors orderless org-roam pdf-tools
+		   quickrun restclient smartparens treemacs-evil
+		   vertico yasnippet-snippets)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -262,3 +285,53 @@
 ;; Setting pkgconf variable for pdf-tools install 
 (setenv "PKG_CONFIG_PATH" "/opt/homebrew/Cellar/poppler/25.01.0/lib/pkgconfig/:/usr/X11/lib:/pkgconfig/usr/local/Cellar/libffi/3.2.1/lib/pkgconfig:/opt/homebrew/Cellar/glib/2.82.4/lib/pkgconfig/:/opt/homebrew/Cellar/cairo/1.18.2/lib/pkgconfig/:/opt/homebrew/Cellar/libpng/1.6.46/lib/pkgconfig/:/opt/homebrew/Cellar/zlib/1.3.1/lib/pkgconfig/zlib.pc")
 (put 'downcase-region 'disabled nil)
+
+
+
+(ignore-errors
+  (require 'ansi-color)
+  (defun my-colorize-compilation-buffer ()
+    (when (eq major-mode 'compilation-mode)
+      (ansi-color-apply-on-region compilation-filter-start (point-max))))
+  (add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer))
+
+
+(use-package smartparens
+  :ensure smartparens  ;; install the package
+  :hook (prog-mode text-mode markdown-mode) ;; add `smartparens-mode` to these hooks
+  :config
+  ;; load default config
+  
+  (require 'smartparens-config))
+
+
+;; This is honestly killing me a bit -- 
+;; but recursive editing seems pretty powerful so i'll keep it for now
+(setq enable-recursive-minibuffers t)
+
+;;
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(setq x-select-enable-clipboard t)
+
+;; Make it so that that you delete a region instead of kill it
+(delete-selection-mode)
+
+;; Make it so that you highlight a line 
+(hl-line-mode)
+
+;; Go back and forward different layouts using C-c <arrows>
+(winner-mode)
+
+;; ;; Try to get Poke working for better binary data mangling 
+;; (add-to-list 'load-path
+;; 	     (concat user-emacs-directory "/elpa/poke-3.2"))
+(require 'poke)
+
+;; Add window movement (shift + arrow keys)
+;; (windmove-default-keybindings)
+
+
+(setq enable-recursive-minibuffers nil)
+(require 'multiple-cursors)
+
