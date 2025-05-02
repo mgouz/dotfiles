@@ -90,7 +90,7 @@ source $ZSH/oh-my-zsh.sh
 
 # Preferred editor for local and remote sessions
 #if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
+export EDITOR='nvim'
 # else
 #   export EDITOR='nvim'
 # fi
@@ -115,8 +115,6 @@ alias vim="nvim"
 alias gcc="/usr/bin/gcc"
 alias as="/usr/bin/as"
 alias ld="/usr/bin/ld"
-
-source ~/.nvm/nvm.sh
 
 # The following lines were added by compinstall
 zstyle :compinstall filename '/Users/mattgouzoulis/.zshrc'
@@ -148,7 +146,6 @@ export MANPAGER="sh -c 'col -bx | bat -l  man -p'"
 
 
 alias v=nvim
-alias python=python3.13
 alias gs="git status -s -b"
 alias ga="git add"
 alias gc="git commit -v"
@@ -157,7 +154,6 @@ alias glg="git log --graph --abbrev-commit --decorate --format=format:'%C(bold b
 export PATH="/usr/local/sbin:$PATH"
 export PATH="/usr/local/bin:$PATH"
 export PATH="/opt/local/bin:$PATH"
-export PATH="/Users/mattgouzoulis/.nvm/versions/node/v20.18.0/bin/:$PATH"
 export PATH="/Users/mattgouzoulis/bin/$PATH"
 
 # export EMACSDIR="~/.config/emacs"
@@ -187,3 +183,12 @@ export NIXADDR=172.16.221.128
 
 PS1="${PS1//\\u/"$SHLVL:\\u"}"
 
+# . "/Users/mattgouzoulis/.deno/env"
+# bun completions
+# [ -s "/Users/mattgouzoulis/.bun/_bun" ] && source "/Users/mattgouzoulis/.bun/_bun"
+
+# bun
+# export BUN_INSTALL="$HOME/.bun"
+# export PATH="$BUN_INSTALL/bin:$PATH"
+
+eval "$(mise activate zsh)"
