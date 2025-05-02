@@ -1,0 +1,19 @@
+;;;; Emacs Bookmark Format Version 1;;;; -*- coding: utf-8-emacs; mode: lisp-data -*-
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("(mu4e) Emacs bookmarks" (front-context-string . "13.4 Emacs bookm")
+ (rear-context-string . "p: Integration\n\n") (position . 135438)
+ (last-modified 26540 6130 711347 0)
+ (filename . "/opt/homebrew/share/info/mu4e")
+ (info-node . "Emacs bookmarks") (handler . Info-bookmark-jump))
+("org-capture-last-stored"
+ (filename . "~/org/roam/20250427011243-web.org")
+ (front-context-string . "\n* Core Web Vita")
+ (rear-context-string . "ND:\n#+title: Web") (position . 80)
+ (last-modified 26637 48380 263130 0))
+("org-refile-last-stored"
+ (filename . "~/org-roam/20250126200617-networking.org")
+ (front-context-string) (rear-context-string . "ve-low-latency/\n")
+ (position . 22929) (last-modified 26524 5056 599098 0))
+)

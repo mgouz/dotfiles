@@ -120,8 +120,16 @@
   (keymap-global-set (kbd "s-[") 'previous-buffer 1)
   (keymap-global-set (kbd "s-]") 'next-buffer 1)
   (global-set-key (kbd "s-/") 'comment-line)
-  (global-set-key (kbd "M-n") 'forward-paragraph)
-  (global-set-key (kbd "M-p") 'backward-paragraph)
+
+  ;; Stop killing wrods when I want to DELETE them
+
+  ;; (global-set-key (kbd "C-w") 'delete-region-no-kill)
+  ;; (global-set-key (kbd "M-<backspace>") 'backward-delete-word)
+  ;; (global-set-key (kbd "M-DEL") 'backward-delete-word)
+
+
+  ;; (global-set-key (kbd "M-n") 'forward-paragraph)
+  ;; (global-set-key (kbd "M-p") 'backward-paragraph)
   (global-set-key (kbd "C-x P") 'project-switch-project)
   (global-set-key (kbd "M-m") 'compile)
   (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -173,13 +181,16 @@
   (setq ispell-program-name "aspell")
 
   ;; Make Flymake run in all programming buffers
-  (add-hook 'prog-mode-hook 'flymake-mode)  
-  (add-hook 'org-mode-hook 'flyspell-mode)  
+  (add-hook 'prog-mode-hook 'flymake-mode)
+  (add-hook 'org-mode-hook 'flyspell-mode)
+  (add-hook 'mhtml-mode-hook 'emmet-mode)
+  
 
   ;; Disbale auto save to stop spamming my machine with auto-save files everywhere 
   (setq auto-save-default nil)
   
-  (add-to-list 'auto-mode-alist '("\\.yml$'" . yaml-ts-mode))
+  (setq auto-mode-alist (append '(("\\.ts$" . typescript-ts-mode)
+				  ("\\.yml$'" . yaml-ts-mode)) auto-mode-alist))
 
   ;; PDF View does not play nice with display-line-numbers-mode
   (dolist (mode '(text-mode-hook
@@ -250,6 +261,21 @@
 	(typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
 	(yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
+;; (add-to-list 'eglot-server-programs '((js-mode typescript-mode) . (eglot-deno "deno" "lsp")))
+;; (defclass eglot-deno (eglot-lsp-server) ()
+;;   :documentation "A custom class for deno lsp.")
+
+;; (cl-defmethod eglot-initialization-options ((server eglot-deno))
+;;   "Passes through required deno initialization options"
+;;   (list :enable t
+;; 	:lint t))
+
+;; (push auto-mode-alist
+;;       ("\\.ts" . typescript-ts-mode))
+
+(require 'dired-x)
+(require 'json)
+
 (use-package vterm
   :ensure t
   :load-path   "~/.emacs.d/emacs-libvterm")
@@ -273,7 +299,7 @@
 		   evil-snipe evil-surround general magit marginalia
 		   multiple-cursors orderless org-roam pdf-tools
 		   quickrun restclient smartparens treemacs-evil
-		   vertico yasnippet-snippets)))
+		   vertico yasnippet-snippets zig-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
