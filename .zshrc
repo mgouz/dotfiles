@@ -16,6 +16,7 @@ export ZSH="/Users/mattgouzoulis/.oh-my-zsh"
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="robbyrussell"
+# ZSH_THEME="atomic"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -77,9 +78,11 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
+eval "$(starship init zsh)"
+
 plugins=(git direnv)
 
-source $ZSH/oh-my-zsh.sh
+# source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
@@ -104,7 +107,7 @@ export EDITOR='nvim'
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-alias zshconfig="vim ~/.zshrc"
+alias zc="vim ~/.zshrc"
 alias ohmyzsh="vim ~/.oh-my-zsh"
 alias ls="ls -GF"
 alias grep="rg"
@@ -115,6 +118,7 @@ alias vim="nvim"
 alias gcc="/usr/bin/gcc"
 alias as="/usr/bin/as"
 alias ld="/usr/bin/ld"
+alias sz="source ~/.zshrc"
 
 # The following lines were added by compinstall
 zstyle :compinstall filename '/Users/mattgouzoulis/.zshrc'
@@ -149,6 +153,9 @@ alias v=nvim
 alias gs="git status -s -b"
 alias ga="git add"
 alias gc="git commit -v"
+alias gd="git diff"
+alias gp="git push"
+alias gds="git diff --staged"
 alias glg="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all"
 
 export PATH="/usr/local/sbin:$PATH"
@@ -192,3 +199,6 @@ PS1="${PS1//\\u/"$SHLVL:\\u"}"
 # export PATH="$BUN_INSTALL/bin:$PATH"
 
 eval "$(mise activate zsh)"
+export PATH="$HOME/vcpkg:$PATH"
+export CPATH="$CPATH:/opt/homebrew/include/"
+export PATH="$HOME/go/bin:$PATH"
