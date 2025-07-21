@@ -177,5 +177,9 @@
   :config 
   (global-set-key (kbd "s-/") 'evilnc-comment-or-uncomment-lines))
 
+;; (evil-set-initial-state 'dired-mode 'emacs)
+;; (evil-set-initial-state 'magit-status-mode 'evil)
+
 (provide 'mg-evil)
+
 ;;; evil.el ends here

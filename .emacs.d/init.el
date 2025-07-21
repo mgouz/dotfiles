@@ -11,6 +11,24 @@
 
 (add-to-list 'load-path "./modules")
 
+;; (defvar bootstrap-version)
+;; (let ((bootstrap-file
+;;        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+;;       (bootstrap-version 6))
+;;   (unless (file-exists-p bootstrap-file)
+;;     (with-current-buffer
+;;         (url-retrieve-synchronously
+;; 	 "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+;; 	 'silent 'inhibit-cookies)
+;;       (goto-char (point-max))
+;;       (eval-print-last-sexp)))
+;;   (load bootstrap-file nil 'nomessage))
+
+;; (straight-use-package 'use-package)  ;; optional but recommended
+;; (straight-pull-recipe-repositories)
+;; (setq straight-allow-recipe-inheritance nil)
+
+
 ;; bootstrap use-package
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -18,7 +36,7 @@
 
 (require 'use-package)
 
-; (add-to-list 'load-path "/opt/homebrew/Cellar/mu/1.12.8/share/emacs/site-lisp/mu/mu4e")
+					; (add-to-list 'load-path "/opt/homebrew/Cellar/mu/1.12.8/share/emacs/site-lisp/mu/mu4e")
 
 
 (when (file-exists-p "/opt/homebrew/Cellar/mu/1.12.8/share/emacs/site-lisp/mu/mu4e")
@@ -83,7 +101,7 @@
 
 (add-to-list 'load-path (concat user-emacs-directory "/modules"))
 (require 'mg-ui)
-;; (require 'mg-evil)
+(require 'mg-evil)
 (require 'mg-wip)
 (require 'mg-git)
 (require 'mg-completion-minibuffer)
@@ -119,7 +137,7 @@
   (keymap-global-set (kbd "s-w") 'tab-close 1)
   (keymap-global-set (kbd "s-[") 'previous-buffer 1)
   (keymap-global-set (kbd "s-]") 'next-buffer 1)
-  (global-set-key (kbd "s-/") 'comment-line)
+  (global-set-key (kbd "s-/") 'evilnc-comment-or-uncomment-lines)
 
   ;; Stop killing wrods when I want to DELETE them
 
@@ -151,13 +169,24 @@
   (global-set-key (kbd "M-#") 'dictionary-lookup-definition)
   
   
- 
+  
   ;; When I press this, I want to follow to a new window
   ;; (global-set-key (kbd "s-<return>") 'ret-new-buffer)
   ;; (global-set-key (kbd "s-<mouse-1>") 'ret-new-buffer)
 
   ;; Eglot settings for run
   ;; (add-hook 'c- 'eglot-ensure)
+  ;; (add-hook 'c-mode-hook 'eglot-ensure)
+  ;; (add-hook 'c++-mode-hook 'eglot-ensure)
+  ;; (add-hook 'dockerfile-mode-hook 'eglot-ensure)
+  ;; (add-hook 'dockerfile-mode-hook 'eglot-ensure)
+  ;; (add-hook 'rust-mode 'eglot-ensure)
+  ;; (add-hook 'go-mode 'eglot-ensure)
+  ;; (add-hook 'python-mode 'eglot-ensure)
+  ;; (add-hook 'typescript-mode
+  ;;    'eglot-ensure)
+  
+
 
   ;; UI
   (tool-bar-mode 0) ;; Remove tool bar
@@ -184,9 +213,17 @@
   (add-hook 'prog-mode-hook 'flymake-mode)
   (add-hook 'org-mode-hook 'flyspell-mode)
   (add-hook 'mhtml-mode-hook 'emmet-mode)
+
+  (use-package flymake
+    :config
+    (setq flymake-show-diagnostics-at-end-of-line nil)
+    (setq flymake-no-changes-timeout 0.5)
+    :bind (:map flymake-mode-map
+                ("M-n" . flymake-goto-next-error) ; optional but recommended error navigation
+                ("M-p" . flymake-goto-prev-error)))
   
 
-  ;; Disbale auto save to stop spamming my machine with auto-save files everywhere 
+  ;; Disbale auto save to stop spamming my machine with auto-save files everywhere
   (setq auto-save-default nil)
   
   (setq auto-mode-alist (append '(("\\.ts$" . typescript-ts-mode)
@@ -203,11 +240,11 @@
 
 
   ;; Used for getting rid of the top window bar
-;; Don't get rid of it for Gnu/Linux 
+  ;; Don't get rid of it for Gnu/Linux 
   (cond 
-	;; ((string-equal  system-type  "darwin") (add-to-list 'default-frame-alist '(undecorated . t)) )
-	((string-equal system-type  "gnu/linux") ())
-  )
+   ;; ((string-equal  system-type  "darwin") (add-to-list 'default-frame-alist '(undecorated . t)) )
+   ((string-equal system-type  "gnu/linux") ())
+   )
 
   ;; Set font to be bigger in Graphical Emacs on WSL/Linux
   ;; (if (equal system-type  "gnu/linux")
@@ -292,14 +329,19 @@
  '(elfeed-feeds '("https://osblog.stephenmarz.com/feed.rss"))
  '(org-babel-load-languages
    '((emacs-lisp . t) (awk . t) (python . t) (js . t) (java . t) (C . t)
-     (sqlite . t) (css . t) (lua . t)))
+     (sqlite . t) (css . t) (lua . t) (go . t) (rust . t)))
  '(package-selected-packages
-   '(all-the-icons cape corfu diff-hl doom-modeline doom-themes elfeed
-		   embark-consult evil-collection evil-nerd-commenter
-		   evil-snipe evil-surround general magit marginalia
-		   multiple-cursors orderless org-roam pdf-tools
-		   quickrun restclient smartparens treemacs-evil
-		   vertico yasnippet-snippets zig-mode)))
+   '(all-the-icons calfw cape catppuccin-theme corfu dap-mode dape
+		   diff-hl dockerfile-mode doom-modeline doom-themes
+		   elfeed ellama embark-consult ement emmet-mode
+		   evil-collection evil-nerd-commenter evil-snipe
+		   evil-surround forge go-mode gptel lsp-tailwindcss
+		   lsp-ui marginalia multiple-cursors nix-mode ob-go
+		   orderless org-roam pdf-tools perspective poke
+		   poke-mode quickrun restclient rust-mode
+		   simple-httpd smartparens treemacs-evil
+		   treemacs-projectile tuareg typescript-mode vertico
+		   vterm web-mode yasnippet-snippets zig-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -361,3 +403,229 @@
 (setq enable-recursive-minibuffers nil)
 (require 'multiple-cursors)
 
+(use-package ellama
+  :ensure t
+  :bind ("C-c e" . ellama)
+  ;; send last message in chat buffer with C-c C-c
+  :hook (org-ctrl-c-ctrl-c-final . ellama-chat-send-last-message)
+  :init
+  ;; setup key bindings
+  ;; (setopt ellama-keymap-prefix "C-c e")
+  ;; language you want ellama to translate to
+  (setopt ellama-language "German")
+  ;; could be llm-openai for example
+  (require 'llm-ollama)
+  (setopt ellama-provider
+  	  (make-llm-ollama
+  	   ;; this model should be pulled to use it
+  	   ;; value should be the same as you print in terminal during pull
+  	   :chat-model "llama3:8b-instruct-q8_0"
+  	   :embedding-model "nomic-embed-text"
+  	   :default-chat-non-standard-params '(("num_ctx" . 8192))))
+  (setopt ellama-summarization-provider
+  	  (make-llm-ollama
+  	   :chat-model "qwen2.5:3b"
+  	   :embedding-model "nomic-embed-text"
+  	   :default-chat-non-standard-params '(("num_ctx" . 32768))))
+  (setopt ellama-coding-provider
+  	  (make-llm-ollama
+  	   :chat-model "qwen2.5-coder:3b"
+  	   :embedding-model "nomic-embed-text"
+  	   :default-chat-non-standard-params '(("num_ctx" . 32768))))
+  ;; Predefined llm providers for interactive switching.
+  ;; You shouldn't add ollama providers here - it can be selected interactively
+  ;; without it. It is just example.
+  (setopt ellama-providers
+  	  '(("zephyr" . (make-llm-ollama
+  			 :chat-model "zephyr:7b-beta-q6_K"
+  			 :embedding-model "zephyr:7b-beta-q6_K"))
+  	    ("mistral" . (make-llm-ollama
+  			  :chat-model "mistral:7b-instruct-v0.2-q6_K"
+  			  :embedding-model "mistral:7b-instruct-v0.2-q6_K"))
+  	    ("mixtral" . (make-llm-ollama
+  			  :chat-model "mixtral:8x7b-instruct-v0.1-q3_K_M-4k"
+  			  :embedding-model "mixtral:8x7b-instruct-v0.1-q3_K_M-4k"))))
+  ;; Naming new sessions with llm
+  (setopt ellama-naming-provider
+  	  (make-llm-ollama
+  	   :chat-model "llama3:8b-instruct-q8_0"
+  	   :embedding-model "nomic-embed-text"
+  	   :default-chat-non-standard-params '(("stop" . ("\n")))))
+  (setopt ellama-naming-scheme 'ellama-generate-name-by-llm)
+  ;; Translation llm provider
+  (setopt ellama-translation-provider
+  	  (make-llm-ollama
+  	   :chat-model "qwen2.5:3b"
+  	   :embedding-model "nomic-embed-text"
+  	   :default-chat-non-standard-params
+  	   '(("num_ctx" . 32768))))
+  (setopt ellama-extraction-provider (make-llm-ollama
+  				      :chat-model "qwen2.5-coder:7b-instruct-q8_0"
+  				      :embedding-model "nomic-embed-text"
+  				      :default-chat-non-standard-params
+  				      '(("num_ctx" . 32768))))
+  ;; customize display buffer behaviour
+  ;; see ~(info "(elisp) Buffer Display Action Functions")~
+  (setopt ellama-chat-display-action-function #'display-buffer-full-frame)
+  (setopt ellama-instant-display-action-function #'display-buffer-at-bottom)
+  :config
+  ;; show ellama context in header line in all buffers
+  (ellama-context-header-line-global-mode +1)
+  ;; show ellama session id in header line in all buffers
+  (ellama-session-header-line-global-mode +1)
+  ;; handle scrolling events
+  (advice-add 'pixel-scroll-precision :before #'ellama-disable-scroll)
+  (advice-add 'end-of-buffer :after #'ellama-enable-scroll))
+
+(use-package lsp-mode
+  :diminish "LSP"
+  :ensure t
+  :hook ((lsp-mode . lsp-diagnostics-mode)
+         (lsp-mode . lsp-enable-which-key-integration)
+         ((tsx-ts-mode
+           typescript-ts-mode
+           js-ts-mode) . lsp-deferred))
+  :custom
+  (lsp-keymap-prefix "C-c l")           ; Prefix for LSP actions
+  (lsp-completion-provider :none)       ; Using Corfu as the provider
+  (lsp-diagnostics-provider :flymake)
+  (lsp-session-file (locate-user-emacs-file ".lsp-session"))
+  (lsp-log-io nil)                      ; IMPORTANT! Use only for debugging! Drastically affects performance
+  (lsp-keep-workspace-alive nil)        ; Close LSP server if all project buffers are closed
+  (lsp-idle-delay 0.5)                  ; Debounce timer for `after-change-function'
+  ;; core
+  (lsp-enable-xref t)                   ; Use xref to find references
+  (lsp-auto-configure t)                ; Used to decide between current active servers
+  (lsp-eldoc-enable-hover t)            ; Display signature information in the echo area
+  (lsp-enable-dap-auto-configure t)     ; Debug support
+  (lsp-enable-file-watchers nil)
+  (lsp-enable-folding nil)              ; I disable folding since I use origami
+  (lsp-enable-imenu t)
+  (lsp-enable-indentation nil)          ; I use prettier
+  (lsp-enable-links nil)                ; No need since we have `browse-url'
+  (lsp-enable-on-type-formatting nil)   ; Prettier handles this
+  (lsp-enable-suggest-server-download t) ; Useful prompt to download LSP providers
+  (lsp-enable-symbol-highlighting t)     ; Shows usages of symbol at point in the current buffer
+  (lsp-enable-text-document-color nil)   ; This is Treesitter's job
+
+  (lsp-ui-sideline-show-hover nil)      ; Sideline used only for diagnostics
+  (lsp-ui-sideline-diagnostic-max-lines 20) ; 20 lines since typescript errors can be quite big
+  ;; completion
+  (lsp-completion-enable t)
+  (lsp-completion-enable-additional-text-edit t) ; Ex: auto-insert an import for a completion candidate
+  (lsp-enable-snippet t)                         ; Important to provide full JSX completion
+  (lsp-completion-show-kind t)                   ; Optional
+  ;; headerline
+  (lsp-headerline-breadcrumb-enable t)  ; Optional, I like the breadcrumbs
+  (lsp-headerline-breadcrumb-enable-diagnostics nil) ; Don't make them red, too noisy
+  (lsp-headerline-breadcrumb-enable-symbol-numbers nil)
+  (lsp-headerline-breadcrumb-icons-enable nil)
+  ;; modeline
+  (lsp-modeline-code-actions-enable nil) ; Modeline should be relatively clean
+  (lsp-modeline-diagnostics-enable nil)  ; Already supported through `flycheck'
+  (lsp-modeline-workspace-status-enable nil) ; Modeline displays "LSP" when lsp-mode is enabled
+  (lsp-signature-doc-lines 1)                ; Don't raise the echo area. It's distracting
+  (lsp-ui-doc-use-childframe t)              ; Show docs for symbol at point
+  (lsp-eldoc-render-all nil)            ; This would be very useful if it would respect `lsp-signature-doc-lines', currently it's distracting
+  ;; lens
+  (lsp-lens-enable nil)                 ; Optional, I don't need it
+  ;; semantic
+  (lsp-semantic-tokens-enable nil)      ; Related to highlighting, and we defer to treesitter
+
+  :init
+  (setq lsp-use-plists t))
+
+(use-package lsp-completion
+  :no-require
+  :hook ((lsp-mode . lsp-completion-mode)))
+
+(use-package lsp-ui
+  :ensure t
+  :commands
+  (lsp-ui-doc-show
+   lsp-ui-doc-glance)
+  :bind (:map lsp-mode-map
+              ("C-c C-d" . 'lsp-ui-doc-glance))
+  :after (lsp-mode evil)
+  :config (setq lsp-ui-doc-enable t
+                evil-lookup-func #'lsp-ui-doc-glance ; Makes K in evil-mode toggle the doc for symbol at point
+                lsp-ui-doc-show-with-cursor nil      ; Don't show doc when cursor is over symbol - too distracting
+                lsp-ui-doc-include-signature t       ; Show signature
+                lsp-ui-doc-position 'at-point))
+
+
+;; :hook ((html-mode css-mode web-mode tsx-ts-mode typescript-ts-mode js-mode svelte-mode) . lsp))
+
+
+(use-package lsp-tailwindcss
+  :straight '(lsp-tailwindcss :type git :host github :repo "merrickluo/lsp-tailwindcss")
+  :init (setq lsp-tailwindcss-add-on-mode t)
+  :config
+  (dolist (tw-major-mode
+           '(css-mode
+             css-ts-mode
+             typescript-mode
+             typescript-ts-mode
+             tsx-ts-mode
+             js2-mode
+             js-ts-mode
+             clojure-mode))
+    (add-to-list 'lsp-tailwindcss-major-modes tw-major-mode)))
+
+(use-package lsp-ui
+  :ensure t
+  :commands
+  (lsp-ui-doc-show
+   lsp-ui-doc-glance)
+  :bind (:map lsp-mode-map
+              ("C-c C-d" . 'lsp-ui-doc-glance))
+  :after (lsp-mode evil)
+  :config (setq lsp-ui-doc-enable t
+                evil-lookup-func #'lsp-ui-doc-glance ; Makes K in evil-mode toggle the doc for symbol at point
+                lsp-ui-doc-show-with-cursor nil      ; Don't show doc when cursor is over symbol - too distracting
+                lsp-ui-doc-include-signature t       ; Show signature
+                lsp-ui-doc-position 'at-point))
+
+(use-package lsp-eslint
+  :demand t
+  :after lsp-mode)
+
+
+(with-eval-after-load 'lsp-mode
+  (add-to-list 'lsp-language-id-configuration '(tsx-ts-mode . "typescriptreact"))
+
+  (lsp-register-client
+   (make-lsp-client
+    :new-connection (lsp-stdio-connection '("tailwindcss-language-server" "--stdio"))
+    :activation-fn (lsp-activate-on "typescriptreact")
+    :server-id 'tailwindcss
+    :add-on? t
+    :priority -1)))
+(add-hook 'tsx-ts-mode-hook #'lsp-deferred)
+
+
+
+;; (use-package combobulate
+;;   :ensure t
+;;   :preface
+;;   ;; You can customize Combobulate's key prefix here.
+;;   ;; Note that you may have to restart Emacs for this to take effect!
+;;   (setq combobulate-key-prefix "C-c o")
+
+;;   ;; Optional, but recommended.
+;;   ;;
+;;   ;; You can manually enable Combobulate with `M-x
+;;   ;; combobulate-mode'.
+;;   :hook
+;;   ((python-ts-mode . combobulate-mode)
+;;    (js-ts-mode . combobulate-mode)
+;;    (go-mode . go-ts-mode)
+;;    (html-ts-mode . combobulate-mode)
+;;    (css-ts-mode . combobulate-mode)
+;;    (yaml-ts-mode . combobulate-mode)
+;;    (typescript-ts-mode . combobulate-mode)
+;;    (json-ts-mode . combobulate-mode)
+;;    (tsx-ts-mode . combobulate-mode))
+
+  ;; (use-package tsx-mode
+  ;;   :straight '(tsx-mode :type git :host github :repo "orzechowskid/tsx-mode.el" :branch "emacs30")) 

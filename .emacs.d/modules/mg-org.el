@@ -1,5 +1,6 @@
 ;; -*- lexical-binding: t -*-
 ;; Configuration for org and stuff
+(require 'org)
 
 ;; Org-mode setup
 (use-package org-roam
@@ -71,8 +72,8 @@
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-goto-calendar)
 
-;; Trying to add more keywords to the do list... not working right now 
-(setq org-todo-keywords (append '((sequence "[ ]" "[X]")) org-todo-keywords))
+;; Trying to add more keywords to the do list... not working right now
+;; (setq 'org-todo-keywords (append '((sequence "[ ]" "[X]")) org-todo-keywords))
 
 (add-to-list 'Info-directory-list (concat org-directory "/to-read"))
 
