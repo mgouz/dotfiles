@@ -82,8 +82,6 @@ eval "$(starship init zsh)"
 
 plugins=(git direnv)
 
-# source $ZSH/oh-my-zsh.sh
-
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -106,20 +104,6 @@ export EDITOR='nvim'
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 #
-# Example aliases
-alias zc="vim ~/.zshrc"
-alias ohmyzsh="vim ~/.oh-my-zsh"
-alias ls="ls -GF"
-alias grep="rg"
-alias stat="stat -x"
-alias ec="emacsclient -nw"
-alias v="nvim"
-alias vim="nvim"
-alias gcc="/usr/bin/gcc"
-alias as="/usr/bin/as"
-alias ld="/usr/bin/ld"
-alias sz="source ~/.zshrc"
-
 # The following lines were added by compinstall
 zstyle :compinstall filename '/Users/mattgouzoulis/.zshrc'
 
@@ -149,7 +133,8 @@ export MANPAGER="sh -c 'col -bx | bat -l  man -p'"
 # [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 
-alias v=nvim
+# Aliases
+## Git 
 alias gs="git status -s -b"
 alias ga="git add"
 alias gc="git commit -v"
@@ -157,6 +142,26 @@ alias gd="git diff"
 alias gp="git push"
 alias gds="git diff --staged"
 alias glg="git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all"
+alias gdf="git diff --name-only --cached --diff-filter=AM" # git show staged but not diffed files
+
+## Tools weren't working for some reason so this was an attempt to fix
+alias gcc="/usr/bin/gcc"
+alias as="/usr/bin/as"
+alias ld="/usr/bin/ld"
+
+# Sane defaults
+alias ls="ls -GF"
+alias grep="rg"
+alias stat="stat -x"
+
+## General stuff
+alias zc="vim ~/.zshrc"
+alias ec="emacsclient -nw"
+alias sz="source ~/.zshrc"
+alias v="nvim"
+alias vim="nvim"
+alias mux=tmuxinator
+
 
 export PATH="/usr/local/sbin:$PATH"
 export PATH="/usr/local/bin:$PATH"
@@ -170,33 +175,13 @@ export PATH="/Users/mattgouzoulis/Library/Python/3.7/bin:$PATH"
 export PATH="/Library/Developer/CommandLineTools/usr/bin/:$PATH"
 export PATH="$HOME/.config/emacs-configs/doom/bin:$PATH"
 export PATH="/run/current-system/sw/bin:$PATH"
-export DOOMDIR="$HOME/.doom.d"
+# export DOOMDIR="$HOME/.doom.d"
 
 
 source <(fzf --zsh)
 
-
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-# export SDKMAN_DIR="$HOME/.sdkman"
-# [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-
 # Created by `pipx` on 2025-01-01 23:23:10
 export PATH="$PATH:/Users/mattgouzoulis/.local/bin"
-export DATABASE_PASSWORD="passwod"
-
-
-export NIX_CONF_DIR=/Users/mattgouzoulis/.config/nix
-export NIXADDR=172.16.221.128
-
-PS1="${PS1//\\u/"$SHLVL:\\u"}"
-
-# . "/Users/mattgouzoulis/.deno/env"
-# bun completions
-# [ -s "/Users/mattgouzoulis/.bun/_bun" ] && source "/Users/mattgouzoulis/.bun/_bun"
-
-# bun
-# export BUN_INSTALL="$HOME/.bun"
-# export PATH="$BUN_INSTALL/bin:$PATH"
 
 eval "$(mise activate zsh)"
 export PATH="$HOME/vcpkg:$PATH"
