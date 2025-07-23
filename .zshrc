@@ -150,7 +150,7 @@ alias as="/usr/bin/as"
 alias ld="/usr/bin/ld"
 
 # Sane defaults
-alias ls="ls -GF"
+alias ls="ls -lhGF"
 alias grep="rg"
 alias stat="stat -x"
 
