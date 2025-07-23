@@ -1,7 +1,7 @@
 # My Dotfiles (WIP)
 
 This repository is for my configs.  I mainly update my .emacs.d as it is my primary editor so be prepared for most commits to come from that.
-Many of the other configs are either hacked together from cursory readings of manuals/guides or fully taken from a kickstart repo (eg my neovim config). 
+Many of the other configs are either hacked together from cursory readings of manuals/guides or fully taken from a kickstart repo ([eg my neovim config](https://github.com/nvim-lua/kickstart.nvim)). 
 I don't think anything is in a clean enough state to be used for inspiration or another machine.  
 
 
