@@ -32,12 +32,12 @@
 ;; bootstrap use-package
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
-  (package-install 'use-package))
+  (package-install 'use-package)
+  (setq use-package-always-ensure t))
 
 (require 'use-package)
 
-					; (add-to-list 'load-path "/opt/homebrew/Cellar/mu/1.12.8/share/emacs/site-lisp/mu/mu4e")
-
+(setq lsp-use-plists t)
 
 (when (file-exists-p "/opt/homebrew/Cellar/mu/1.12.8/share/emacs/site-lisp/mu/mu4e")
   (require 'mu4e)
@@ -315,7 +315,7 @@
 
 (use-package vterm
   :ensure t
-  :load-path   "~/.emacs.d/emacs-libvterm")
+  )
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -323,25 +323,20 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("4594d6b9753691142f02e67b8eb0fda7d12f6cc9f1299a49b819312d6addad1d"
-     "e8bd9bbf6506afca133125b0be48b1f033b1c8647c628652ab7a2fe065c10ef0"
-     default))
+   '("4594d6b9753691142f02e67b8eb0fda7d12f6cc9f1299a49b819312d6addad1d" "e8bd9bbf6506afca133125b0be48b1f033b1c8647c628652ab7a2fe065c10ef0" default))
  '(elfeed-feeds '("https://osblog.stephenmarz.com/feed.rss"))
  '(org-babel-load-languages
-   '((emacs-lisp . t) (awk . t) (python . t) (js . t) (java . t) (C . t)
-     (sqlite . t) (css . t) (lua . t) (go . t) (rust . t)))
+   '((emacs-lisp . t)
+     (awk . t)
+     (python . t)
+     (js . t)
+     (java . t)
+     (C . t)
+     (sqlite . t)
+     (css . t)
+     (lua . t)))
  '(package-selected-packages
-   '(all-the-icons calfw cape catppuccin-theme corfu dap-mode dape
-		   diff-hl dockerfile-mode doom-modeline doom-themes
-		   elfeed ellama embark-consult ement emmet-mode
-		   evil-collection evil-nerd-commenter evil-snipe
-		   evil-surround forge go-mode gptel lsp-tailwindcss
-		   lsp-ui marginalia multiple-cursors nix-mode ob-go
-		   orderless org-roam pdf-tools perspective poke
-		   poke-mode quickrun restclient rust-mode
-		   simple-httpd smartparens treemacs-evil
-		   treemacs-projectile tuareg typescript-mode vertico
-		   vterm web-mode yasnippet-snippets zig-mode)))
+   '(luarocks lua-mode dap-mode lsp-tailwindcss lsp-ui lsp-mode projectile which-key treemacs-magit all-the-icons calfw cape catppuccin-theme corfu dape diff-hl dockerfile-mode doom-modeline doom-themes elfeed ellama embark-consult ement emmet-mode evil-collection evil-nerd-commenter evil-snipe evil-surround forge go-mode gptel marginalia multiple-cursors nix-mode ob-go orderless org-roam pdf-tools perspective quickrun restclient rust-mode simple-httpd smartparens treemacs-evil treemacs-projectile tuareg typescript-mode vertico vterm web-mode yasnippet-snippets zig-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -354,6 +349,79 @@
 (setenv "PKG_CONFIG_PATH" "/opt/homebrew/Cellar/poppler/25.01.0/lib/pkgconfig/:/usr/X11/lib:/pkgconfig/usr/local/Cellar/libffi/3.2.1/lib/pkgconfig:/opt/homebrew/Cellar/glib/2.82.4/lib/pkgconfig/:/opt/homebrew/Cellar/cairo/1.18.2/lib/pkgconfig/:/opt/homebrew/Cellar/libpng/1.6.46/lib/pkgconfig/:/opt/homebrew/Cellar/zlib/1.3.1/lib/pkgconfig/zlib.pc")
 (put 'downcase-region 'disabled nil)
 
+(use-package gptel
+  :ensure t
+  :bind (("C-c RET" . gptel-send)
+	 ("C-c g" . gptel-menu)))
+
+
+(use-package mcp
+  :ensure t
+  :after gptel
+  :custom (mcp-hub-servers
+           `(("filesystem" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-filesystem" "/home/lizqwer/MyProject/")))
+             ("fetch" . (:command "uvx" :args ("mcp-server-fetch")))
+             ("qdrant" . (:url "http://localhost:8000/sse"))
+             ("graphlit" . (
+                            :command "npx"
+                            :args ("-y" "graphlit-mcp-server")
+                            :env (
+                                  :GRAPHLIT_ORGANIZATION_ID "your-organization-id"
+                                  :GRAPHLIT_ENVIRONMENT_ID "your-environment-id"
+                                  :GRAPHLIT_JWT_SECRET "your-jwt-secret")))))
+  :config (require 'mcp-hub)
+  :hook (after-init . mcp-hub-start-all-server))
+
+
+(with-eval-after-load 'gptel
+(gptel-make-ollama "Ollama"             ;Any name of your choosing
+  :host "localhost:11434"               ;Where it's running
+  :stream t                             ;Stream responses
+  :models '(mistral:latest deepseek-r1:1.5b)))
+
+(use-package aidermacs
+  :ensure t
+  :bind (("C-c a" . aidermacs-transient-menu))
+  :config
+  ; Set API_KEY in .bashrc, that will automatically picked up by aider or in elisp
+  (setenv "ANTHROPIC_API_KEY" "")
+  ; defun my-get-openrouter-api-key yourself elsewhere for security reasons
+  ;; (setenv "OPENROUTER_API_KEY" (my-get-openrouter-api-key))
+  :custom
+  ; See the Configuration section below
+  (aidermacs-default-chat-mode 'architect)
+  (aidermacs-default-model "sonnet"))
+
+
+(use-package aider
+  :ensure t
+  :config
+  ;; For latest claude sonnet model
+  (setq aider-args '("--model" "sonnet" "--no-auto-accept-architect")) ;; add --no-auto-commits if you don't want it
+  (setenv "ANTHROPIC_API_KEY" "")
+  ;; Or chatgpt model
+  ;; (setq aider-args '("--model" "o4-mini"))
+  ;; (setenv "OPENAI_API_KEY" <your-openai-api-key>)
+  ;; Or use your personal config file
+  ;; (setq aider-args `("--config" ,(expand-file-name "~/.aider.conf.yml")))
+  ;; ;;
+  ;; Optional: Set a key binding for the transient menu
+  (global-set-key (kbd "C-c a") 'aider-transient-menu) ;; for wider screen
+  ;; or use aider-transient-menu-2cols / aider-transient-menu-1col, for narrow screen
+  (aider-magit-setup-transients) ;; add aider magit function to magit menu
+  ;; auto revert buffer
+  (global-auto-revert-mode 1)
+  (auto-revert-mode 1))
+
+
+(use-package copilot
+  :vc (:url "https://github.com/copilot-emacs/copilot.el"
+            :rev :newest
+            :branch "main"))
+
+(add-hook 'prog-mode-hook 'copilot-mode)
+(define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
+(define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
 
 
 (ignore-errors
@@ -394,146 +462,76 @@
 ;; ;; Try to get Poke working for better binary data mangling 
 ;; (add-to-list 'load-path
 ;; 	     (concat user-emacs-directory "/elpa/poke-3.2"))
-(require 'poke)
+
 
 ;; Add window movement (shift + arrow keys)
 ;; (windmove-default-keybindings)
 
 
 (setq enable-recursive-minibuffers nil)
-(require 'multiple-cursors)
-
-(use-package ellama
-  :ensure t
-  :bind ("C-c e" . ellama)
-  ;; send last message in chat buffer with C-c C-c
-  :hook (org-ctrl-c-ctrl-c-final . ellama-chat-send-last-message)
-  :init
-  ;; setup key bindings
-  ;; (setopt ellama-keymap-prefix "C-c e")
-  ;; language you want ellama to translate to
-  (setopt ellama-language "German")
-  ;; could be llm-openai for example
-  (require 'llm-ollama)
-  (setopt ellama-provider
-  	  (make-llm-ollama
-  	   ;; this model should be pulled to use it
-  	   ;; value should be the same as you print in terminal during pull
-  	   :chat-model "llama3:8b-instruct-q8_0"
-  	   :embedding-model "nomic-embed-text"
-  	   :default-chat-non-standard-params '(("num_ctx" . 8192))))
-  (setopt ellama-summarization-provider
-  	  (make-llm-ollama
-  	   :chat-model "qwen2.5:3b"
-  	   :embedding-model "nomic-embed-text"
-  	   :default-chat-non-standard-params '(("num_ctx" . 32768))))
-  (setopt ellama-coding-provider
-  	  (make-llm-ollama
-  	   :chat-model "qwen2.5-coder:3b"
-  	   :embedding-model "nomic-embed-text"
-  	   :default-chat-non-standard-params '(("num_ctx" . 32768))))
-  ;; Predefined llm providers for interactive switching.
-  ;; You shouldn't add ollama providers here - it can be selected interactively
-  ;; without it. It is just example.
-  (setopt ellama-providers
-  	  '(("zephyr" . (make-llm-ollama
-  			 :chat-model "zephyr:7b-beta-q6_K"
-  			 :embedding-model "zephyr:7b-beta-q6_K"))
-  	    ("mistral" . (make-llm-ollama
-  			  :chat-model "mistral:7b-instruct-v0.2-q6_K"
-  			  :embedding-model "mistral:7b-instruct-v0.2-q6_K"))
-  	    ("mixtral" . (make-llm-ollama
-  			  :chat-model "mixtral:8x7b-instruct-v0.1-q3_K_M-4k"
-  			  :embedding-model "mixtral:8x7b-instruct-v0.1-q3_K_M-4k"))))
-  ;; Naming new sessions with llm
-  (setopt ellama-naming-provider
-  	  (make-llm-ollama
-  	   :chat-model "llama3:8b-instruct-q8_0"
-  	   :embedding-model "nomic-embed-text"
-  	   :default-chat-non-standard-params '(("stop" . ("\n")))))
-  (setopt ellama-naming-scheme 'ellama-generate-name-by-llm)
-  ;; Translation llm provider
-  (setopt ellama-translation-provider
-  	  (make-llm-ollama
-  	   :chat-model "qwen2.5:3b"
-  	   :embedding-model "nomic-embed-text"
-  	   :default-chat-non-standard-params
-  	   '(("num_ctx" . 32768))))
-  (setopt ellama-extraction-provider (make-llm-ollama
-  				      :chat-model "qwen2.5-coder:7b-instruct-q8_0"
-  				      :embedding-model "nomic-embed-text"
-  				      :default-chat-non-standard-params
-  				      '(("num_ctx" . 32768))))
-  ;; customize display buffer behaviour
-  ;; see ~(info "(elisp) Buffer Display Action Functions")~
-  (setopt ellama-chat-display-action-function #'display-buffer-full-frame)
-  (setopt ellama-instant-display-action-function #'display-buffer-at-bottom)
-  :config
-  ;; show ellama context in header line in all buffers
-  (ellama-context-header-line-global-mode +1)
-  ;; show ellama session id in header line in all buffers
-  (ellama-session-header-line-global-mode +1)
-  ;; handle scrolling events
-  (advice-add 'pixel-scroll-precision :before #'ellama-disable-scroll)
-  (advice-add 'end-of-buffer :after #'ellama-enable-scroll))
 
 (use-package lsp-mode
   :diminish "LSP"
   :ensure t
   :hook ((lsp-mode . lsp-diagnostics-mode)
          (lsp-mode . lsp-enable-which-key-integration)
-         ((tsx-ts-mode
-           typescript-ts-mode
-           js-ts-mode) . lsp-deferred))
+         (tsx-ts-mode . lsp-deferred)
+	 (rust-mode . lsp-deferred)
+	 (go-mode . lsp-deferred)
+	 (typescript-mode . lsp-deferred)
+	 (typescript-ts-mode . lsp-deferred))
   :custom
   (lsp-keymap-prefix "C-c l")           ; Prefix for LSP actions
   (lsp-completion-provider :none)       ; Using Corfu as the provider
   (lsp-diagnostics-provider :flymake)
-  (lsp-session-file (locate-user-emacs-file ".lsp-session"))
+  ;; (lsp-session-file (locate-user-emacs-file ".lsp-session"))
   (lsp-log-io nil)                      ; IMPORTANT! Use only for debugging! Drastically affects performance
   (lsp-keep-workspace-alive nil)        ; Close LSP server if all project buffers are closed
   (lsp-idle-delay 0.5)                  ; Debounce timer for `after-change-function'
-  ;; core
+  ;; ;; core
   (lsp-enable-xref t)                   ; Use xref to find references
   (lsp-auto-configure t)                ; Used to decide between current active servers
   (lsp-eldoc-enable-hover t)            ; Display signature information in the echo area
+  (lsp-eldoc-render-all nil)
   (lsp-enable-dap-auto-configure t)     ; Debug support
-  (lsp-enable-file-watchers nil)
-  (lsp-enable-folding nil)              ; I disable folding since I use origami
+  ;; (lsp-enable-file-watchers nil)
+  ;; (lsp-enable-folding nil)              ; I disable folding since I use origami
   (lsp-enable-imenu t)
-  (lsp-enable-indentation nil)          ; I use prettier
-  (lsp-enable-links nil)                ; No need since we have `browse-url'
-  (lsp-enable-on-type-formatting nil)   ; Prettier handles this
+  ;; (lsp-enable-indentation nil)          ; I use prettier
+  ;; (lsp-enable-links nil)                ; No need since we have `browse-url'
+  ;; (lsp-enable-on-type-formatting nil)   ; Prettier handles this
   (lsp-enable-suggest-server-download t) ; Useful prompt to download LSP providers
   (lsp-enable-symbol-highlighting t)     ; Shows usages of symbol at point in the current buffer
   (lsp-enable-text-document-color nil)   ; This is Treesitter's job
 
-  (lsp-ui-sideline-show-hover nil)      ; Sideline used only for diagnostics
-  (lsp-ui-sideline-diagnostic-max-lines 20) ; 20 lines since typescript errors can be quite big
-  ;; completion
+  ;; (lsp-ui-sideline-show-hover nil)      ; Sideline used only for diagnostics
+  ;; (lsp-ui-sideline-diagnostic-max-lines 20) ; 20 lines since typescript errors can be quite big
+  ;; ;; completion
   (lsp-completion-enable t)
-  (lsp-completion-enable-additional-text-edit t) ; Ex: auto-insert an import for a completion candidate
+  ;; (lsp-completion-enable-additional-text-edit t) ; Ex: auto-insert an import for a completion candidate
   (lsp-enable-snippet t)                         ; Important to provide full JSX completion
   (lsp-completion-show-kind t)                   ; Optional
-  ;; headerline
+  ;; ;; headerline
   (lsp-headerline-breadcrumb-enable t)  ; Optional, I like the breadcrumbs
   (lsp-headerline-breadcrumb-enable-diagnostics nil) ; Don't make them red, too noisy
-  (lsp-headerline-breadcrumb-enable-symbol-numbers nil)
-  (lsp-headerline-breadcrumb-icons-enable nil)
-  ;; modeline
-  (lsp-modeline-code-actions-enable nil) ; Modeline should be relatively clean
-  (lsp-modeline-diagnostics-enable nil)  ; Already supported through `flycheck'
-  (lsp-modeline-workspace-status-enable nil) ; Modeline displays "LSP" when lsp-mode is enabled
-  (lsp-signature-doc-lines 1)                ; Don't raise the echo area. It's distracting
+  ;; (lsp-headerline-breadcrumb-enable-symbol-numbers nil)
+  ;; (lsp-headerline-breadcrumb-icons-enable nil)
+  ;; ;; modeline
+  ;; (lsp-modeline-code-actions-enable nil) ; Modeline should be relatively clean
+  ;; ;; (lsp-modeline-diagnostics-enable nil)  ; Already supported through `flycheck'
+  ;; (lsp-modeline-workspace-status-enable nil) ; Modeline displays "LSP" when lsp-mode is enabled
+  ;; (lsp-signature-doc-lines 1)                ; Don't raise the echo area. It's distracting
   (lsp-ui-doc-use-childframe t)              ; Show docs for symbol at point
-  (lsp-eldoc-render-all nil)            ; This would be very useful if it would respect `lsp-signature-doc-lines', currently it's distracting
-  ;; lens
-  (lsp-lens-enable nil)                 ; Optional, I don't need it
-  ;; semantic
+  ;; ;; (lsp-eldoc-render-all nil)            ; This would be very useful if it would respect `lsp-signature-doc-lines', currently it's distracting
+  ;; ;; lens
+  ;; (lsp-lens-enable nil)                 ; Optional, I don't need it
+  ;; ;; semantic
   (lsp-semantic-tokens-enable nil)      ; Related to highlighting, and we defer to treesitter
 
   :init
   (setq lsp-use-plists t))
+
+(use-package dap-mode)
 
 (use-package lsp-completion
   :no-require
@@ -549,21 +547,28 @@
   :after (lsp-mode evil)
   :config (setq lsp-ui-doc-enable t
                 evil-lookup-func #'lsp-ui-doc-glance ; Makes K in evil-mode toggle the doc for symbol at point
-                lsp-ui-doc-show-with-cursor nil      ; Don't show doc when cursor is over symbol - too distracting
+                ;; lsp-ui-doc-show-with-cursor nil      ; Don't show doc when cursor is over symbol - too distracting
                 lsp-ui-doc-include-signature t       ; Show signature
                 lsp-ui-doc-position 'at-point))
 
+(use-package forge
+  :ensure t
+  :after magit)
 
 ;; :hook ((html-mode css-mode web-mode tsx-ts-mode typescript-ts-mode js-mode svelte-mode) . lsp))
 
 
 (use-package lsp-tailwindcss
-  :straight '(lsp-tailwindcss :type git :host github :repo "merrickluo/lsp-tailwindcss")
+  ;; :straight '(lsp-tailwindcss :type git :host github :repo "merrickluo/lsp-tailwindcss")
   :init (setq lsp-tailwindcss-add-on-mode t)
+  :ensure t
+  :after lsp-mode
   :config
   (dolist (tw-major-mode
            '(css-mode
              css-ts-mode
+	     web-mode
+	     html-mode
              typescript-mode
              typescript-ts-mode
              tsx-ts-mode
@@ -572,6 +577,20 @@
              clojure-mode))
     (add-to-list 'lsp-tailwindcss-major-modes tw-major-mode)))
 
+(use-package typescript-mode
+  :mode "\\.ts"
+  :hook (typescipt-mode . lsp-deferred)
+  :config
+  (setq typescript-indent-level 2)
+  (require 'dap-node)
+  (dap-node-setup))
+(dap-register-debug-template
+  "Debug Electron"
+  (list :type "node"
+        :request "launch"
+        :program "${workspaceFolder}/main.ts"
+        :outFiles ["${workspaceFolder}/dist/**/*.js"]
+        :name "Debug Server"))
 (use-package lsp-ui
   :ensure t
   :commands
@@ -593,6 +612,7 @@
 
 (with-eval-after-load 'lsp-mode
   (add-to-list 'lsp-language-id-configuration '(tsx-ts-mode . "typescriptreact"))
+  (add-to-list 'lsp-language-id-configuration '(jsx-ts-mode . "typescriptreact"))
 
   (lsp-register-client
    (make-lsp-client
@@ -603,7 +623,7 @@
     :priority -1)))
 (add-hook 'tsx-ts-mode-hook #'lsp-deferred)
 
-
+(require 'multiple-cursors)
 
 ;; (use-package combobulate
 ;;   :ensure t
@@ -629,3 +649,6 @@
 
   ;; (use-package tsx-mode
   ;;   :straight '(tsx-mode :type git :host github :repo "orzechowskid/tsx-mode.el" :branch "emacs30")) 
+(use-package treemacs
+  :config
+  (setq treemacs-position 'right))

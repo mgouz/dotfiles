@@ -46,6 +46,8 @@
   ;; 							   (switch-to-buffer current))))
   (evil-define-key 'normal 'global (kbd "<leader>pj")  'project-find-tag)
 
+  (evil-define-key 'normal 'global (kbd "<leader>aa")  'aidermacs-transient-menu)
+  (evil-define-key 'normal 'global (kbd "<leader>ad")  'project-find-dir)
   ;; Shell functions
   ;; (evil-define-key 'normal 'global (kbd "<leader>xm")  'insert-file) ;; Mimic mkdir functionality
 

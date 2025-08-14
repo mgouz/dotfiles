@@ -36,7 +36,7 @@
 ;; Example configuration for Consult
 (use-package consult
   ;; Replace bindings. Lazily loaded by `use-package'.
-  ;; :bind (;; C-c bindings in `mode-specific-map'
+  :bind ;; C-c bindings in `mode-specific-map'
   ;;        ("C-c M-x" . consult-mode-command)
   ;;        ("C-c h" . consult-history)
   ;;        ("C-c k" . consult-kmacro)
@@ -65,7 +65,7 @@
   ;;        ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
   ;;        ("M-g m" . consult-mark)
   ;;        ("M-g k" . consult-global-mark)
-  ;;        ("M-g i" . consult-imenu)
+         ("M-g i" . consult-imenu)
   ;;        ("M-g I" . consult-imenu-multi)
   ;;        ;; M-s bindings in `search-map'
   ;;        ("M-s d" . consult-find)                  ;; Alternative: consult-fd
