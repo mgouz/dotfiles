@@ -132,6 +132,14 @@ export MANPAGER="sh -c 'col -bx | bat -l  man -p'"
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 # [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+function auto_venv_activate() {
+  if [[ -d "venv" && -f "venv/bin/activate" ]]; then
+    source "venv/bin/activate"
+  elif [[ -d ".venv" && -f ".venv/bin/activate" ]]; then
+    source ".venv/bin/activate"
+  fi
+}
+add-zsh-hook chpwd auto_venv_activate
 
 # Aliases
 ## Git 
@@ -150,7 +158,10 @@ alias as="/usr/bin/as"
 alias ld="/usr/bin/ld"
 
 # Sane defaults
-alias ls="ls -lhGF"
+alias ll="ls -lhGF"
+alias ls="ls -hGF"
+alias la="ls -lahGF"
+alias ldot="ls -dhl .*"
 alias grep="rg"
 alias stat="stat -x"
 
@@ -187,3 +198,9 @@ eval "$(mise activate zsh)"
 export PATH="$HOME/vcpkg:$PATH"
 export CPATH="$CPATH:/opt/homebrew/include/"
 export PATH="$HOME/go/bin:$PATH"
+export PATH="/Users/mattgouzoulis/.bun/bin:$PATH"
+
+
+# Load Angular CLI autocompletion.
+source <(ng completion script)
+eval "$(uv generate-shell-completion zsh)"
