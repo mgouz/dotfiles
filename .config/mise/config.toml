@@ -1,11 +1,17 @@
 [tools]
 bun = "latest"
 deno = "latest"
+elixir = "latest"
+erlang = "latest"
+go = "latest"
 java = "17"
 node = "latest"
-python = "3.13"
+pnpm = "latest"
+python = "3.11"
 rust = "latest"
 zig = "latest"
 
 [settings]
 idiomatic_version_file_enable_tools = ["node", "python", "rust", "java"]
+python.uv_venv_auto = true
+
