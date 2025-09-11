@@ -11,6 +11,11 @@
 
 (add-to-list 'load-path "./modules")
 
+(defun edit-init-file ()
+  "Edit the `user-init-file', in other words, this file."
+  (interactive)
+  (find-file user-init-file))
+
 ;; (defvar bootstrap-version)
 ;; (let ((bootstrap-file
 ;;        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -275,7 +280,7 @@
 (use-package perspective
   :ensure t
   :bind
-  ("C-x C-b" . persp-list-buffers)         ; or use a nicer switcher, see below
+  ;; ("C-x C-b" . persp-list-buffers)         ; or use a nicer switcher, see below
   :custom
   (persp-mode-prefix-key (kbd "C-c M-p"))  ; pick your own prefix key here
   :init
@@ -354,6 +359,9 @@
   :bind (("C-c RET" . gptel-send)
 	 ("C-c g" . gptel-menu)))
 
+(gptel-make-gh-copilot "Copilot")
+
+
 
 (use-package mcp
   :ensure t
@@ -390,28 +398,28 @@
   :custom
   ; See the Configuration section below
   (aidermacs-default-chat-mode 'architect)
-  (aidermacs-default-model "sonnet"))
+  (aidermacs-default-model "github_copilot/gpt-4.1")) ; or "o4-mini" for chatgpt)
 
 
-(use-package aider
-  :ensure t
-  :config
-  ;; For latest claude sonnet model
-  (setq aider-args '("--model" "sonnet" "--no-auto-accept-architect")) ;; add --no-auto-commits if you don't want it
-  (setenv "ANTHROPIC_API_KEY" "")
-  ;; Or chatgpt model
-  ;; (setq aider-args '("--model" "o4-mini"))
-  ;; (setenv "OPENAI_API_KEY" <your-openai-api-key>)
-  ;; Or use your personal config file
-  ;; (setq aider-args `("--config" ,(expand-file-name "~/.aider.conf.yml")))
-  ;; ;;
-  ;; Optional: Set a key binding for the transient menu
-  (global-set-key (kbd "C-c a") 'aider-transient-menu) ;; for wider screen
-  ;; or use aider-transient-menu-2cols / aider-transient-menu-1col, for narrow screen
-  (aider-magit-setup-transients) ;; add aider magit function to magit menu
-  ;; auto revert buffer
-  (global-auto-revert-mode 1)
-  (auto-revert-mode 1))
+;; (use-package aider
+;;   :ensure t
+;;   :config
+;;   ;; For latest claude sonnet model
+;;   (setq aider-args '("--model" "github_copilot/gpt-4.1" "--no-auto-accept-architect")) ;; add --no-auto-commits if you don't want it
+;;   (setenv "ANTHROPIC_API_KEY" "")
+;;   ;; Or chatgpt model
+;;   ;; (setq aider-args '("--model" "o4-mini"))
+;;   ;; (setenv "OPENAI_API_KEY" <your-openai-api-key>)
+;;   ;; Or use your personal config file
+;;   ;; (setq aider-args `("--config" ,(expand-file-name "~/.aider.conf.yml")))
+;;   ;; ;;
+;;   ;; Optional: Set a key binding for the transient menu
+;;   (global-set-key (kbd "C-c a") 'aider-transient-menu) ;; for wider screen
+;;   ;; or use aider-transient-menu-2cols / aider-transient-menu-1col, for narrow screen
+;;   (aider-magit-setup-transients) ;; add aider magit function to magit menu
+;;   ;; auto revert buffer
+;;   (global-auto-revert-mode 1)
+;;   (auto-revert-mode 1))
 
 
 (use-package copilot

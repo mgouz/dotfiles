@@ -16,7 +16,7 @@
   :config 
   ;; Don't set emacs mode because it can affect
   (evil-set-leader '(normal motion) (kbd "SPC")) ;; Has issues in Info mode, finder, and ibuffer/dired
-  (evil-define-key 'normal  'global (kbd "<leader>.")  'find-file)
+  (evil-define-key 'normal  'global  (kbd "<leader>.")  'find-file)
   (evil-define-key 'normal  'global (kbd "<leader>;")  'eval-expression)
   (evil-define-key 'normal  'global (kbd "<leader>:")  'execute-extended-command)
 
@@ -36,6 +36,16 @@
   (evil-define-key 'normal 'global (kbd "<leader>pd")  'project-find-dir)
   ;; (evil-define-key 'normal 'global (kbd "<leader>pe")  'projectile-run-vterm-other-window)
 
+  ;; Projectile settings
+  (evil-define-key 'normal 'global (kbd "<leader>C-.")  'persp-switch)
+  (evil-define-key 'normal 'global (kbd "<leader><TAB><TAB>")  'persp-switch)
+  (evil-define-key 'normal 'global (kbd "<leader><TAB>.")  'persp-switch)
+  (evil-define-key 'normal 'global (kbd "<leader>C-r")  'persp-rename)
+  (evil-define-key 'normal 'global (kbd "<leader>C-[")  'persp-prev)
+  (evil-define-key 'normal 'global (kbd "<leader><escape>")  'persp-prev)
+  (evil-define-key 'normal 'global (kbd "<leader>C-]")  'persp-next)
+  (evil-define-key 'normal 'global (kbd "<leader>C-d")  'persp-kill)
+
 					;(add-hook 'vterm-mode-hook 'turn-off-evil-mode) 
   ;; (evil-define-key 'normal 'global (kbd "<leader>pe")  (lambda () (interactive)
   ;; 							 (let ((current (current-buffer)))
@@ -46,8 +56,9 @@
   ;; 							   (switch-to-buffer current))))
   (evil-define-key 'normal 'global (kbd "<leader>pj")  'project-find-tag)
 
+  ;; AI bindings
   (evil-define-key 'normal 'global (kbd "<leader>aa")  'aidermacs-transient-menu)
-  (evil-define-key 'normal 'global (kbd "<leader>ad")  'project-find-dir)
+
   ;; Shell functions
   ;; (evil-define-key 'normal 'global (kbd "<leader>xm")  'insert-file) ;; Mimic mkdir functionality
 
@@ -89,6 +100,9 @@
   (evil-define-key 'normal 'global (kbd "<leader>is")  'yas-insert-snippet)
 
   (evil-define-key 'normal 'global (kbd "<leader>xe")  'eshell)
+  (evil-define-key 'normal 'global (kbd "<leader>fs") 'save-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader>yi") 'yas-insert-snippet)
+
 
   ;; (evil-define-key 'normal 'global (kbd "<leader>cf")  ')
   ;; (evil-define-key 'normal 'global (kbd "<leader>cv")  ')
