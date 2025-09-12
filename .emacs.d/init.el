@@ -11,6 +11,24 @@
 
 (add-to-list 'load-path "./modules")
 
+(let ((backup-dir "~/tmp/emacs/backups")
+      (auto-saves-dir "~/tmp/emacs/auto-saves/"))
+  (dolist (dir (list backup-dir auto-saves-dir))
+    (when (not (file-directory-p dir))
+      (make-directory dir t)))
+  (setq backup-directory-alist `(("." . ,backup-dir))
+        auto-save-file-name-transforms `((".*" ,auto-saves-dir t))
+        auto-save-list-file-prefix (concat auto-saves-dir ".saves-")
+        tramp-backup-directory-alist `((".*" . ,backup-dir))
+        tramp-auto-save-directory auto-saves-dir))
+
+(setq backup-by-copying t    ; Don't delink hardlinks
+      delete-old-versions t  ; Clean up the backups
+      version-control t      ; Use version numbers on backups,
+      kept-new-versions 5    ; keep some new versions
+      kept-old-versions 2)   ; and some old ones, too
+
+
 (defun edit-init-file ()
   "Edit the `user-init-file', in other words, this file."
   (interactive)
@@ -155,7 +173,12 @@
   ;; (global-set-key (kbd "M-p") 'backward-paragraph)
   (global-set-key (kbd "C-x P") 'project-switch-project)
   (global-set-key (kbd "M-m") 'compile)
-  (global-set-key (kbd "C-x C-b") 'ibuffer)
+  (global-set-key (kbd "C-x C-b")
+		  (lambda ()
+		    (interactive)
+		    (if (bound-and-true-p persp-mode)
+			(ibuffer) (persp-ibuffer)))
+		  )
   ;; Misc key maps
   (global-set-key (kbd "s-P") 'execute-extended-command) ; Mimic VSCode's command pallete
   (global-set-key (kbd "S-s-<return>") 'maximize-window) ; C-w = to balance windows again (a-la iterm2)

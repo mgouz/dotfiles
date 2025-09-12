@@ -19,6 +19,10 @@
   (evil-define-key 'normal  'global  (kbd "<leader>.")  'find-file)
   (evil-define-key 'normal  'global (kbd "<leader>;")  'eval-expression)
   (evil-define-key 'normal  'global (kbd "<leader>:")  'execute-extended-command)
+  (evil-define-key 'normal  'global (kbd "<leader>/")  'consult-line) ;; was evil-search-forward
+  (evil-define-key 'normal  'global (kbd "C-z")  'suspend-frame)
+  (evil-define-key 'normal  'global (kbd "C-x C-z")  'evil-emacs-state)
+
 
 
 
