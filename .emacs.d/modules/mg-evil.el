@@ -15,7 +15,7 @@
   :ensure t ;; install the evil package if not installed
   :config 
   ;; Don't set emacs mode because it can affect
-  (evil-set-leader '(normal motion) (kbd "SPC")) ;; Has issues in Info mode, finder, and ibuffer/dired
+  (evil-set-leader '(normal motion) (kbd "SPC")) ;; Has issues in Info mode, finder, ibuffer, and dired
   (evil-define-key 'normal  'global  (kbd "<leader>.")  'find-file)
   (evil-define-key 'normal  'global (kbd "<leader>;")  'eval-expression)
   (evil-define-key 'normal  'global (kbd "<leader>:")  'execute-extended-command)
@@ -26,18 +26,24 @@
 
 
 
-  ;; (define-prefix-command 'buffer)
+  ;; Buffer setting
   (evil-define-key 'normal 'global (kbd "<leader>bi")  'ibuffer)
   (evil-define-key 'normal 'global (kbd "<leader>bk")  'kill-buffer)
   (evil-define-key 'normal 'global (kbd "<leader>B")  'switch-to-buffer)
   (evil-define-key 'normal 'global (kbd "<leader>bb")  'switch-to-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader>d")  'dired-jump)
 
-  ;; Projectile settings
+  ;; Project settings
   (evil-define-key 'normal 'global (kbd "<leader>pi")  'consult-project-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader>pb")  'consult-project-buffer)
   (evil-define-key 'normal 'global (kbd "<leader>pf")  'project-find-file)
   (evil-define-key 'normal 'global (kbd "<leader>pp")  'project-switch-project)
+  (evil-define-key 'normal 'global (kbd "<leader>pk")  'project-kill-buffers)
   (evil-define-key 'normal 'global (kbd "<leader>pt")  'treemacs)
   (evil-define-key 'normal 'global (kbd "<leader>pd")  'project-find-dir)
+  (evil-define-key 'normal 'global (kbd "<leader>pr")  'project-query-replace-regexp)
+  (evil-define-key 'normal 'global (kbd "<leader>pg")  'consult-ripgrep)
+  (evil-define-key 'normal 'global (kbd "<leader>pv")  'magit)
   ;; (evil-define-key 'normal 'global (kbd "<leader>pe")  'projectile-run-vterm-other-window)
 
   ;; Projectile settings
@@ -48,7 +54,12 @@
   (evil-define-key 'normal 'global (kbd "<leader>C-[")  'persp-prev)
   (evil-define-key 'normal 'global (kbd "<leader><escape>")  'persp-prev)
   (evil-define-key 'normal 'global (kbd "<leader>C-]")  'persp-next)
-  (evil-define-key 'normal 'global (kbd "<leader>C-d")  'persp-kill)
+  (evil-define-key 'normal 'global (kbd "<leader>C-k")  'persp-kill)
+
+  (evil-define-key 'normal 'global (kbd "<leader><TAB>r")  'persp-rename)
+  (evil-define-key 'normal 'global (kbd "<leader><TAB>[")  'persp-prev)
+  (evil-define-key 'normal 'global (kbd "<leader><TAB>-]")  'persp-next)
+  (evil-define-key 'normal 'global (kbd "<leader><TAB>k")  'persp-kill)
 
 					;(add-hook 'vterm-mode-hook 'turn-off-evil-mode) 
   ;; (evil-define-key 'normal 'global (kbd "<leader>pe")  (lambda () (interactive)
@@ -94,18 +105,35 @@
   (evil-define-key 'normal 'global (kbd "<leader>hB")  'describe-bindings)
 
   ;; Code actions 
-  (evil-define-key 'normal 'global (kbd "<leader>ce")  'eglot)
-  (evil-define-key 'normal 'global (kbd "<leader>cc")  'compile)
-  (evil-define-key 'normal 'global (kbd "<leader>cC")  'recompile)
+  ;; (evil-define-key 'normal 'global (kbd "<leader>ce")  'eglot)
+  ;; (evil-define-key 'normal 'global (kbd "<leader>cc")  'compile)
+  ;; (evil-define-key 'normal 'global (kbd "<leader>cC")  'recompile)
   ;; (evil-define-key 'normal 'global (kbd "<leader>k")  'describe-key)
   (evil-define-key 'normal 'global (kbd "<leader>cr")  'xref-find-references)
 
-  ;; Insert
-  (evil-define-key 'normal 'global (kbd "<leader>is")  'yas-insert-snippet)
+  ;; LSP bindings
+  (evil-define-key 'normal 'global (kbd "<leader>L")  'lsp)
+  (evil-define-key 'normal 'global (kbd "<leader>la")  'lsp-execute-code-action)
+  (evil-define-key 'normal 'global (kbd "<leader>ls")  'lsp-describe-session)
+  (evil-define-key 'normal 'global (kbd "<leader>lrr")  'lsp-rename)
+  (evil-define-key 'normal 'global (kbd "<leader>lrf")  'lsp-rename-file)
+  (evil-define-key 'normal 'global (kbd "<leader>lgd")  'lsp-find-definition)
+  (evil-define-key 'normal 'global (kbd "<leader>lgr")  'lsp-find-references)
+  (evil-define-key 'normal 'global (kbd "<leader>lf")  'lsp-format-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader>lF")  'lsp-format-region)
+  ;; (evil-define-key 'normal 'global (kbd "<leadlr>k")  'describe-key)
+  ;; (evil-define-key 'normal 'global (kbd "<leader>lr")  'xref-find-references)
 
-  (evil-define-key 'normal 'global (kbd "<leader>xe")  'eshell)
-  (evil-define-key 'normal 'global (kbd "<leader>fs") 'save-buffer)
+  ;; Insert and Snippet bindings
+  (evil-define-key 'normal 'global (kbd "<leader>is")  'yas-insert-snippet)
   (evil-define-key 'normal 'global (kbd "<leader>yi") 'yas-insert-snippet)
+
+
+  ;; Misc bindings
+  (evil-define-key 'normal 'global (kbd "<leader>xe")  'eshell)
+  (evil-define-key 'normal 'global (kbd "<leader>xd")  'xref-find-definitions)
+  (evil-define-key 'normal 'global (kbd "<leader>xr")  'xref-find-references)
+  (evil-define-key 'normal 'global (kbd "<leader>fs") 'save-buffer)
 
 
   ;; (evil-define-key 'normal 'global (kbd "<leader>cf")  ')

@@ -34,6 +34,11 @@
   (interactive)
   (find-file user-init-file))
 
+(defun zc ()
+  "Edit the `user-init-file', in other words, this file."
+  (interactive)
+  (find-file "~/.zshrc"))
+
 ;; (defvar bootstrap-version)
 ;; (let ((bootstrap-file
 ;;        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -351,26 +356,35 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("4594d6b9753691142f02e67b8eb0fda7d12f6cc9f1299a49b819312d6addad1d" "e8bd9bbf6506afca133125b0be48b1f033b1c8647c628652ab7a2fe065c10ef0" default))
+   '("4594d6b9753691142f02e67b8eb0fda7d12f6cc9f1299a49b819312d6addad1d"
+     "e8bd9bbf6506afca133125b0be48b1f033b1c8647c628652ab7a2fe065c10ef0"
+     default))
  '(elfeed-feeds '("https://osblog.stephenmarz.com/feed.rss"))
  '(org-babel-load-languages
-   '((emacs-lisp . t)
-     (awk . t)
-     (python . t)
-     (js . t)
-     (java . t)
-     (C . t)
-     (sqlite . t)
-     (css . t)
-     (lua . t)))
+   '((emacs-lisp . t) (awk . t) (python . t) (js . t) (java . t) (C . t)
+     (sqlite . t) (css . t) (lua . t)))
  '(package-selected-packages
-   '(luarocks lua-mode dap-mode lsp-tailwindcss lsp-ui lsp-mode projectile which-key treemacs-magit all-the-icons calfw cape catppuccin-theme corfu dape diff-hl dockerfile-mode doom-modeline doom-themes elfeed ellama embark-consult ement emmet-mode evil-collection evil-nerd-commenter evil-snipe evil-surround forge go-mode gptel marginalia multiple-cursors nix-mode ob-go orderless org-roam pdf-tools perspective quickrun restclient rust-mode simple-httpd smartparens treemacs-evil treemacs-projectile tuareg typescript-mode vertico vterm web-mode yasnippet-snippets zig-mode)))
+   '(all-the-icons calfw cape catppuccin-theme cmake-mode corfu dape
+		   diff-hl dockerfile-mode doom-modeline doom-themes
+		   ein elfeed ellama embark-consult ement emmet-mode
+		   evil-collection evil-nerd-commenter evil-snipe
+		   evil-surround forge go-mode gptel lsp-mode
+		   lsp-tailwindcss lsp-ui lua-mode luarocks marginalia
+		   meson-mode multiple-cursors nix-mode ob-go
+		   orderless org-roam pdf-tools perspective projectile
+		   quickrun restclient rust-mode simple-httpd
+		   smartparens treemacs-evil treemacs-magit
+		   treemacs-projectile tuareg typescript-mode vertico
+		   vterm web-mode which-key yasnippet-snippets
+		   zig-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(use-package forge
+  :after magit)
 
 
 ;; Setting pkgconf variable for pdf-tools install 
@@ -562,7 +576,7 @@
   :init
   (setq lsp-use-plists t))
 
-(use-package dap-mode)
+;; (use-package dap-mode)
 
 (use-package lsp-completion
   :no-require
@@ -615,13 +629,14 @@
   (setq typescript-indent-level 2)
   (require 'dap-node)
   (dap-node-setup))
-(dap-register-debug-template
-  "Debug Electron"
-  (list :type "node"
-        :request "launch"
-        :program "${workspaceFolder}/main.ts"
-        :outFiles ["${workspaceFolder}/dist/**/*.js"]
-        :name "Debug Server"))
+
+;; (dap-register-debug-template
+;;   "Debug Electron"
+;;   (list :type "node"
+;;         :request "launch"
+;;         :program "${workspaceFolder}/main.ts"
+;;         :outFiles ["${workspaceFolder}/dist/**/*.js"]
+;;         :name "Debug Server"))
 (use-package lsp-ui
   :ensure t
   :commands

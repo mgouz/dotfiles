@@ -24,3 +24,5 @@
 	ui = auto
 [cinnabar]
 	version-check = 1741468620
+[github]
+	user = mgouz
