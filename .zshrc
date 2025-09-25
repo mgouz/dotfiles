@@ -33,7 +33,7 @@ zstyle :compinstall filename '/Users/mattgouzoulis/.zshrc'
 autoload -Uz compinit
 compinit
 
-source ~/.bash_profile
+# source ~/.bash_profile
 
 # opam configuration
 # test -r /Users/mattgouzoulis/.opam/opam-init/init.zsh && . /Users/mattgouzoulis/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
@@ -99,6 +99,20 @@ alias mux=tmuxinator
 alias hm="vim ~/.config/home-manager/home.nix"
 
 
+## Scripting 
+# alias jup="uv run --wit"
+
+jviz() {
+    # Path to the environment
+    ENV_DIR="$HOME/.jupyter_env"
+
+    # Activate the environment
+    source "$ENV_DIR/.venv/bin/activate"
+
+    # Launch notebook in current directory
+    cd "$PWD"
+    jupyter lab
+}
 export PATH="/usr/local/sbin:$PATH"
 export PATH="/usr/local/bin:$PATH"
 export PATH="/opt/local/bin:$PATH"
@@ -119,7 +133,8 @@ source <(fzf --zsh)
 # Created by `pipx` on 2025-01-01 23:23:10
 export PATH="$PATH:/Users/mattgouzoulis/.local/bin"
 
-eval "$(mise activate zsh)"
+eval "$(mise activate zsh)" # for some reason it seems like this is setting RUSTUP_TOOLCHAIN to 1.86.0
+export RUSTUP_TOOLCHAIN=
 export PATH="$HOME/vcpkg:$PATH"
 export CPATH="$CPATH:/opt/homebrew/include/"
 export PATH="$HOME/go/bin:$PATH"
@@ -128,6 +143,7 @@ export PATH="/Users/mattgouzoulis/.bun/bin:$PATH"
 
 # Load Angular CLI autocompletion.
 source <(ng completion script)
+source <(kubectl completion zsh)
 eval "$(uv generate-shell-completion zsh)"
 source ~/.zshenv_secrets
 # ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
