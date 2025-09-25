@@ -29,7 +29,11 @@
   ;; Buffer setting
   (evil-define-key 'normal 'global (kbd "<leader>bi")  'ibuffer)
   (evil-define-key 'normal 'global (kbd "<leader>bk")  'kill-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader>k")  'kill-buffer)
   (evil-define-key 'normal 'global (kbd "<leader>B")  'switch-to-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader>bxu")  'rename-uniquely)
+  (evil-define-key 'normal 'global (kbd "<leader>bxr")  'rename-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader>s")  'scratch-buffer)
   (evil-define-key 'normal 'global (kbd "<leader>bb")  'switch-to-buffer)
   (evil-define-key 'normal 'global (kbd "<leader>d")  'dired-jump)
 
@@ -37,6 +41,7 @@
   (evil-define-key 'normal 'global (kbd "<leader>pi")  'consult-project-buffer)
   (evil-define-key 'normal 'global (kbd "<leader>pb")  'consult-project-buffer)
   (evil-define-key 'normal 'global (kbd "<leader>pf")  'project-find-file)
+  (evil-define-key 'normal 'global (kbd "s-p")  'project-find-file)
   (evil-define-key 'normal 'global (kbd "<leader>pp")  'project-switch-project)
   (evil-define-key 'normal 'global (kbd "<leader>pk")  'project-kill-buffers)
   (evil-define-key 'normal 'global (kbd "<leader>pt")  'treemacs)
@@ -44,6 +49,7 @@
   (evil-define-key 'normal 'global (kbd "<leader>pr")  'project-query-replace-regexp)
   (evil-define-key 'normal 'global (kbd "<leader>pg")  'consult-ripgrep)
   (evil-define-key 'normal 'global (kbd "<leader>pv")  'magit)
+  (evil-define-key 'normal 'global (kbd "<leader>p!")  'project-run-shell-command-in-root)
   ;; (evil-define-key 'normal 'global (kbd "<leader>pe")  'projectile-run-vterm-other-window)
 
   ;; Projectile settings

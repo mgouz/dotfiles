@@ -1,4 +1,4 @@
-;; setq warning-minimum-level :error  ; don't show warning buffer unless error
+; setq warning-minimum-level :error  ; don't show warning buffer unless error
 					; (setq org-directory "~/org/")
 (setq org-clock-sound t)
 
@@ -35,6 +35,11 @@
   (find-file user-init-file))
 
 (defun zc ()
+  "Edit the `user-init-file', in other words, this file."
+  (interactive)
+  (find-file "~/.zshrc"))
+
+(defun restclient ()
   "Edit the `user-init-file', in other words, this file."
   (interactive)
   (find-file "~/.zshrc"))
@@ -138,9 +143,7 @@
 (require 'mg-debugging)
 
 (use-package yasnippet
-  :ensure t
-  :config
-  (yas-global-mode 1))
+  :ensure t)
 
 
 (use-package yasnippet-snippets
@@ -287,6 +290,7 @@
   
   
   (which-key-mode)
+  (editorconfig-mode 1)
 
 
   ;; Org-mode Setup
@@ -363,20 +367,7 @@
  '(org-babel-load-languages
    '((emacs-lisp . t) (awk . t) (python . t) (js . t) (java . t) (C . t)
      (sqlite . t) (css . t) (lua . t)))
- '(package-selected-packages
-   '(all-the-icons calfw cape catppuccin-theme cmake-mode corfu dape
-		   diff-hl dockerfile-mode doom-modeline doom-themes
-		   ein elfeed ellama embark-consult ement emmet-mode
-		   evil-collection evil-nerd-commenter evil-snipe
-		   evil-surround forge go-mode gptel lsp-mode
-		   lsp-tailwindcss lsp-ui lua-mode luarocks marginalia
-		   meson-mode multiple-cursors nix-mode ob-go
-		   orderless org-roam pdf-tools perspective projectile
-		   quickrun restclient rust-mode simple-httpd
-		   smartparens treemacs-evil treemacs-magit
-		   treemacs-projectile tuareg typescript-mode vertico
-		   vterm web-mode which-key yasnippet-snippets
-		   zig-mode)))
+ '(package-selected-packages nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -522,6 +513,8 @@
          (lsp-mode . lsp-enable-which-key-integration)
          (tsx-ts-mode . lsp-deferred)
 	 (rust-mode . lsp-deferred)
+	 (c++-mode . lsp-deferred)
+	 (python-mode . lsp-deferred)
 	 (go-mode . lsp-deferred)
 	 (typescript-mode . lsp-deferred)
 	 (typescript-ts-mode . lsp-deferred))
@@ -596,6 +589,75 @@
                 lsp-ui-doc-include-signature t       ; Show signature
                 lsp-ui-doc-position 'at-point))
 
+(use-package dap-mode
+  :ensure t
+  :after lsp-mode
+  :config
+  (dap-auto-configure-mode)
+  ;; (require 'dap-lldb)
+  ;; (require 'dap-gdb-lldb)
+  ;; (dap-gdb-lldb-setup)
+  (require 'dap-python)
+  (require 'dap-go)
+  ;; (require 'dap-node)
+  (require 'dap-chrome)
+  ;; (require 'dap-firefox)
+  (require 'dap-cpptools)
+  ;; (require 'dap-java)
+  ;; (require 'dap-netcore)
+  (require 'dap-dlv-go)
+  )
+(with-eval-after-load 'dap-mode
+  (dap-ui-mode 1)
+  (dap-tooltip-mode 1)
+  (tooltip-mode 1)
+  (dap-ui-controls-mode 1)
+  (dap-ui-breakpoints)	
+  (dap-register-debug-template "Go :: Launch File"
+	(list :type "go"
+		  :request "launch"
+		  :name "Launch File"
+		  :mode "auto"
+		  :program "${file}"
+		  :buildFlags ""
+		  :args nil
+		  :env nil
+		  :envFile nil))
+  (dap-register-debug-template "C++ :: Debug Emacs"
+			       (list :type "cppdbg"
+			       :request "launch"
+			       :name "Launch Emacs"
+			       :MIMode "gdb"
+			       :miDebuggerPath "/usr/bin/gdb"
+			       :program "/usr/local/bin/emacs"
+			       :args '("-Q" "--debug-init")
+			       :cwd nil
+			       :environment nil
+			       :externalConsole nil
+			       :stopAtEntry t
+			       :setupCommands
+			       ))
+  ;; (define-key dap-mode-map (kbd "<f5>") 'dap-debug)
+  ;; (define-key dap-mode-map (kbd "<f6>") 'dap-continue)
+  ;; (define-key dap-mode-map (kbd "<f7>") 'dap-next)
+  ;; (define-key dap-mode-map (kbd "<f8>") 'dap-step-in)
+  ;; (define-key dap-mode-map (kbd "<f9>") 'dap-step-out)
+  ;; (define-key dap-mode-map (kbd "<f10>") 'dap-breakpoint-toggle)
+  )
+(with-eval-after-load 'lsp-mode
+  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+  (require 'dap-cpptools)
+  (yas-global-mode))
+
+(use-package disaster
+  :commands (disaster)
+  :ensure t
+  :init
+  ;; If you prefer viewing assembly code in `nasm-mode` instead of `asm-mode`
+  ;; (setq disaster-assembly-mode #'nasm-mode)
+  ;; :bind (:map (c++-mode-map c-mode-map disaster-mode-map)
+  ;;             ("C-c d" . #'disaster))
+  )
 (use-package forge
   :ensure t
   :after magit)
