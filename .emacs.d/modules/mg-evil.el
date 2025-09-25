@@ -157,6 +157,9 @@
   (evil-define-key '(insert motion ) 'global (kbd "C-a") 'move-beginning-of-line)
   (evil-define-key '(insert motion ) 'global (kbd "C-e") 'move-end-of-line)
   (evil-define-key '(normal insert motion) 'global (kbd "C-u") 'evil-scroll-up)
+  (evil-define-key '(normal insert motion) 'global (kbd "C-k") 'previous-line)
+  (evil-define-key '(normal insert motion) 'global (kbd "C-j") 'next-line)
+  (evil-define-key '(normal insert motion) 'global (kbd "C-d") 'delete-char)
 
 
   (evil-set-initial-state 'eshell-mode 'emacs)
