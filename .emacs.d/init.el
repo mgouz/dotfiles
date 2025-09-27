@@ -544,3 +544,22 @@
 (use-package treemacs
   :config
   (setq treemacs-position 'right))
+
+(use-package projectile
+  :ensure t
+  :init
+  (projectile-mode +1)
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
+  :config
+  (setq projectile-completion-system 'default)
+  (setq projectile-enable-caching t)
+  (setq projectile-globally-ignored-directories
+	(append '(".idea" ".vscode" "node_modules" ".git" ".hg" ".svn" ".tox" "__pycache__")
+		projectile-globally-ignored-directories))
+  (setq projectile-globally-ignored-files
+	(append '("TAGS" "*.pyc" "*.o" "*~" "#*#" ".DS_Store")
+		projectile-globally-ignored-files))
+  (setq projectile-indexing-method 'alien)
+  ;; (setq projectile-project-search-path '("~/Projects/" "~/Work/"))
+  )
