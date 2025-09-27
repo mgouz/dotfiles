@@ -371,7 +371,7 @@
      (sqlite . t) (css . t) (lua . t)))
  '(package-selected-packages
    '(aider aidermacs all-the-icons cape catppuccin-theme copilot corfu
-	   dap-mode dape diff-hl disaster dockerfile-mode
+	   dap-mode dape diff-hl disaster docker dockerfile-mode
 	   doom-modeline doom-themes ein embark-consult emmet-mode
 	   evil-collection evil-nerd-commenter evil-snipe
 	   evil-surround forge go-mode gptel leetcode lsp-tailwindcss
@@ -563,3 +563,6 @@
   (setq projectile-indexing-method 'alien)
   ;; (setq projectile-project-search-path '("~/Projects/" "~/Work/"))
   )
+
+(use-package docker
+  :ensure t)

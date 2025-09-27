@@ -135,7 +135,8 @@
   (evil-define-key 'normal 'global (kbd "<leader>lgd")  'lsp-find-definition)
   (evil-define-key 'normal 'global (kbd "<leader>lgr")  'lsp-find-references)
   (evil-define-key 'normal 'global (kbd "<leader>lf")  'lsp-format-buffer)
-  (evil-define-key 'normal 'global (kbd "<leader>lF")  'lsp-format-region)
+  (evil-define-key 'normal 'global (kbd "<leader>lf")  'lsp-format-buffer)
+  (evil-define-key 'normal 'global (kbd "s-O")  'lsp-ui-imenu)
   ;; (evil-define-key 'normal 'global (kbd "<leadlr>k")  'describe-key)
   ;; (evil-define-key 'normal 'global (kbd "<leader>lr")  'xref-find-references)
 
