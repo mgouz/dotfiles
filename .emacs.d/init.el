@@ -141,6 +141,8 @@
 (require 'mg-completion-point)
 (require 'mg-org)
 (require 'mg-debugging)
+(require 'mg-lsp)
+(require 'mg-ai)
 
 (use-package yasnippet
   :ensure t)
@@ -367,7 +369,16 @@
  '(org-babel-load-languages
    '((emacs-lisp . t) (awk . t) (python . t) (js . t) (java . t) (C . t)
      (sqlite . t) (css . t) (lua . t)))
- '(package-selected-packages nil))
+ '(package-selected-packages
+   '(aider aidermacs all-the-icons cape catppuccin-theme copilot corfu
+	   dap-mode dape diff-hl disaster dockerfile-mode
+	   doom-modeline doom-themes ein embark-consult emmet-mode
+	   evil-collection evil-nerd-commenter evil-snipe
+	   evil-surround forge go-mode gptel leetcode lsp-tailwindcss
+	   lsp-ui marginalia mcp meson-mode multiple-cursors nix-mode
+	   orderless org-roam perspective projectile quickrun
+	   restclient rust-mode smartparens treemacs-evil vertico
+	   vterm yasnippet-snippets)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -382,51 +393,7 @@
 (setenv "PKG_CONFIG_PATH" "/opt/homebrew/Cellar/poppler/25.01.0/lib/pkgconfig/:/usr/X11/lib:/pkgconfig/usr/local/Cellar/libffi/3.2.1/lib/pkgconfig:/opt/homebrew/Cellar/glib/2.82.4/lib/pkgconfig/:/opt/homebrew/Cellar/cairo/1.18.2/lib/pkgconfig/:/opt/homebrew/Cellar/libpng/1.6.46/lib/pkgconfig/:/opt/homebrew/Cellar/zlib/1.3.1/lib/pkgconfig/zlib.pc")
 (put 'downcase-region 'disabled nil)
 
-(use-package gptel
-  :ensure t
-  :bind (("C-c RET" . gptel-send)
-	 ("C-c g" . gptel-menu)))
 
-(gptel-make-gh-copilot "Copilot")
-
-
-
-(use-package mcp
-  :ensure t
-  :after gptel
-  :custom (mcp-hub-servers
-           `(("filesystem" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-filesystem" "/home/lizqwer/MyProject/")))
-             ("fetch" . (:command "uvx" :args ("mcp-server-fetch")))
-             ("qdrant" . (:url "http://localhost:8000/sse"))
-             ("graphlit" . (
-                            :command "npx"
-                            :args ("-y" "graphlit-mcp-server")
-                            :env (
-                                  :GRAPHLIT_ORGANIZATION_ID "your-organization-id"
-                                  :GRAPHLIT_ENVIRONMENT_ID "your-environment-id"
-                                  :GRAPHLIT_JWT_SECRET "your-jwt-secret")))))
-  :config (require 'mcp-hub)
-  :hook (after-init . mcp-hub-start-all-server))
-
-
-(with-eval-after-load 'gptel
-(gptel-make-ollama "Ollama"             ;Any name of your choosing
-  :host "localhost:11434"               ;Where it's running
-  :stream t                             ;Stream responses
-  :models '(mistral:latest deepseek-r1:1.5b)))
-
-(use-package aidermacs
-  :ensure t
-  :bind (("C-c a" . aidermacs-transient-menu))
-  :config
-  ; Set API_KEY in .bashrc, that will automatically picked up by aider or in elisp
-  (setenv "ANTHROPIC_API_KEY" "")
-  ; defun my-get-openrouter-api-key yourself elsewhere for security reasons
-  ;; (setenv "OPENROUTER_API_KEY" (my-get-openrouter-api-key))
-  :custom
-  ; See the Configuration section below
-  (aidermacs-default-chat-mode 'architect)
-  (aidermacs-default-model "github_copilot/gpt-4.1")) ; or "o4-mini" for chatgpt)
 
 
 ;; (use-package aider
@@ -448,17 +415,6 @@
 ;;   ;; auto revert buffer
 ;;   (global-auto-revert-mode 1)
 ;;   (auto-revert-mode 1))
-
-
-(use-package copilot
-  :vc (:url "https://github.com/copilot-emacs/copilot.el"
-            :rev :newest
-            :branch "main"))
-
-(add-hook 'prog-mode-hook 'copilot-mode)
-(define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
-(define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
-
 
 (ignore-errors
   (require 'ansi-color)
@@ -506,148 +462,6 @@
 
 (setq enable-recursive-minibuffers nil)
 
-(use-package lsp-mode
-  :diminish "LSP"
-  :ensure t
-  :hook ((lsp-mode . lsp-diagnostics-mode)
-         (lsp-mode . lsp-enable-which-key-integration)
-         (tsx-ts-mode . lsp-deferred)
-	 (rust-mode . lsp-deferred)
-	 (c++-mode . lsp-deferred)
-	 (python-mode . lsp-deferred)
-	 (go-mode . lsp-deferred)
-	 (typescript-mode . lsp-deferred)
-	 (typescript-ts-mode . lsp-deferred))
-  :custom
-  (lsp-keymap-prefix "C-c l")           ; Prefix for LSP actions
-  (lsp-completion-provider :none)       ; Using Corfu as the provider
-  (lsp-diagnostics-provider :flymake)
-  ;; (lsp-session-file (locate-user-emacs-file ".lsp-session"))
-  (lsp-log-io nil)                      ; IMPORTANT! Use only for debugging! Drastically affects performance
-  (lsp-keep-workspace-alive nil)        ; Close LSP server if all project buffers are closed
-  (lsp-idle-delay 0.5)                  ; Debounce timer for `after-change-function'
-  ;; ;; core
-  (lsp-enable-xref t)                   ; Use xref to find references
-  (lsp-auto-configure t)                ; Used to decide between current active servers
-  (lsp-eldoc-enable-hover t)            ; Display signature information in the echo area
-  (lsp-eldoc-render-all nil)
-  (lsp-enable-dap-auto-configure t)     ; Debug support
-  ;; (lsp-enable-file-watchers nil)
-  ;; (lsp-enable-folding nil)              ; I disable folding since I use origami
-  (lsp-enable-imenu t)
-  ;; (lsp-enable-indentation nil)          ; I use prettier
-  ;; (lsp-enable-links nil)                ; No need since we have `browse-url'
-  ;; (lsp-enable-on-type-formatting nil)   ; Prettier handles this
-  (lsp-enable-suggest-server-download t) ; Useful prompt to download LSP providers
-  (lsp-enable-symbol-highlighting t)     ; Shows usages of symbol at point in the current buffer
-  (lsp-enable-text-document-color nil)   ; This is Treesitter's job
-
-  ;; (lsp-ui-sideline-show-hover nil)      ; Sideline used only for diagnostics
-  ;; (lsp-ui-sideline-diagnostic-max-lines 20) ; 20 lines since typescript errors can be quite big
-  ;; ;; completion
-  (lsp-completion-enable t)
-  ;; (lsp-completion-enable-additional-text-edit t) ; Ex: auto-insert an import for a completion candidate
-  (lsp-enable-snippet t)                         ; Important to provide full JSX completion
-  (lsp-completion-show-kind t)                   ; Optional
-  ;; ;; headerline
-  (lsp-headerline-breadcrumb-enable t)  ; Optional, I like the breadcrumbs
-  (lsp-headerline-breadcrumb-enable-diagnostics nil) ; Don't make them red, too noisy
-  ;; (lsp-headerline-breadcrumb-enable-symbol-numbers nil)
-  ;; (lsp-headerline-breadcrumb-icons-enable nil)
-  ;; ;; modeline
-  ;; (lsp-modeline-code-actions-enable nil) ; Modeline should be relatively clean
-  ;; ;; (lsp-modeline-diagnostics-enable nil)  ; Already supported through `flycheck'
-  ;; (lsp-modeline-workspace-status-enable nil) ; Modeline displays "LSP" when lsp-mode is enabled
-  ;; (lsp-signature-doc-lines 1)                ; Don't raise the echo area. It's distracting
-  (lsp-ui-doc-use-childframe t)              ; Show docs for symbol at point
-  ;; ;; (lsp-eldoc-render-all nil)            ; This would be very useful if it would respect `lsp-signature-doc-lines', currently it's distracting
-  ;; ;; lens
-  ;; (lsp-lens-enable nil)                 ; Optional, I don't need it
-  ;; ;; semantic
-  (lsp-semantic-tokens-enable nil)      ; Related to highlighting, and we defer to treesitter
-
-  :init
-  (setq lsp-use-plists t))
-
-;; (use-package dap-mode)
-
-(use-package lsp-completion
-  :no-require
-  :hook ((lsp-mode . lsp-completion-mode)))
-
-(use-package lsp-ui
-  :ensure t
-  :commands
-  (lsp-ui-doc-show
-   lsp-ui-doc-glance)
-  :bind (:map lsp-mode-map
-              ("C-c C-d" . 'lsp-ui-doc-glance))
-  :after (lsp-mode evil)
-  :config (setq lsp-ui-doc-enable t
-                evil-lookup-func #'lsp-ui-doc-glance ; Makes K in evil-mode toggle the doc for symbol at point
-                ;; lsp-ui-doc-show-with-cursor nil      ; Don't show doc when cursor is over symbol - too distracting
-                lsp-ui-doc-include-signature t       ; Show signature
-                lsp-ui-doc-position 'at-point))
-
-(use-package dap-mode
-  :ensure t
-  :after lsp-mode
-  :config
-  (dap-auto-configure-mode)
-  ;; (require 'dap-lldb)
-  ;; (require 'dap-gdb-lldb)
-  ;; (dap-gdb-lldb-setup)
-  (require 'dap-python)
-  (require 'dap-go)
-  ;; (require 'dap-node)
-  (require 'dap-chrome)
-  ;; (require 'dap-firefox)
-  (require 'dap-cpptools)
-  ;; (require 'dap-java)
-  ;; (require 'dap-netcore)
-  (require 'dap-dlv-go)
-  )
-(with-eval-after-load 'dap-mode
-  (dap-ui-mode 1)
-  (dap-tooltip-mode 1)
-  (tooltip-mode 1)
-  (dap-ui-controls-mode 1)
-  (dap-ui-breakpoints)	
-  (dap-register-debug-template "Go :: Launch File"
-	(list :type "go"
-		  :request "launch"
-		  :name "Launch File"
-		  :mode "auto"
-		  :program "${file}"
-		  :buildFlags ""
-		  :args nil
-		  :env nil
-		  :envFile nil))
-  (dap-register-debug-template "C++ :: Debug Emacs"
-			       (list :type "cppdbg"
-			       :request "launch"
-			       :name "Launch Emacs"
-			       :MIMode "gdb"
-			       :miDebuggerPath "/usr/bin/gdb"
-			       :program "/usr/local/bin/emacs"
-			       :args '("-Q" "--debug-init")
-			       :cwd nil
-			       :environment nil
-			       :externalConsole nil
-			       :stopAtEntry t
-			       :setupCommands
-			       ))
-  ;; (define-key dap-mode-map (kbd "<f5>") 'dap-debug)
-  ;; (define-key dap-mode-map (kbd "<f6>") 'dap-continue)
-  ;; (define-key dap-mode-map (kbd "<f7>") 'dap-next)
-  ;; (define-key dap-mode-map (kbd "<f8>") 'dap-step-in)
-  ;; (define-key dap-mode-map (kbd "<f9>") 'dap-step-out)
-  ;; (define-key dap-mode-map (kbd "<f10>") 'dap-breakpoint-toggle)
-  )
-(with-eval-after-load 'lsp-mode
-  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
-  (require 'dap-cpptools)
-  (yas-global-mode))
 
 (use-package disaster
   :commands (disaster)
@@ -699,36 +513,6 @@
 ;;         :program "${workspaceFolder}/main.ts"
 ;;         :outFiles ["${workspaceFolder}/dist/**/*.js"]
 ;;         :name "Debug Server"))
-(use-package lsp-ui
-  :ensure t
-  :commands
-  (lsp-ui-doc-show
-   lsp-ui-doc-glance)
-  :bind (:map lsp-mode-map
-              ("C-c C-d" . 'lsp-ui-doc-glance))
-  :after (lsp-mode evil)
-  :config (setq lsp-ui-doc-enable t
-                evil-lookup-func #'lsp-ui-doc-glance ; Makes K in evil-mode toggle the doc for symbol at point
-                lsp-ui-doc-show-with-cursor nil      ; Don't show doc when cursor is over symbol - too distracting
-                lsp-ui-doc-include-signature t       ; Show signature
-                lsp-ui-doc-position 'at-point))
-
-(use-package lsp-eslint
-  :demand t
-  :after lsp-mode)
-
-
-(with-eval-after-load 'lsp-mode
-  (add-to-list 'lsp-language-id-configuration '(tsx-ts-mode . "typescriptreact"))
-  (add-to-list 'lsp-language-id-configuration '(jsx-ts-mode . "typescriptreact"))
-
-  (lsp-register-client
-   (make-lsp-client
-    :new-connection (lsp-stdio-connection '("tailwindcss-language-server" "--stdio"))
-    :activation-fn (lsp-activate-on "typescriptreact")
-    :server-id 'tailwindcss
-    :add-on? t
-    :priority -1)))
 (add-hook 'tsx-ts-mode-hook #'lsp-deferred)
 
 (require 'multiple-cursors)
