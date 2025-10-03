@@ -349,7 +349,7 @@
 ;; (push auto-mode-alist
 ;;       ("\\.ts" . typescript-ts-mode))
 
-(require 'dired-x)
+;; (require 'dired-x)
 (require 'json)
 
 (use-package vterm
@@ -566,3 +566,23 @@
 
 (use-package docker
   :ensure t)
+
+(use-package clang-format
+  :commands (clang-format-buffer clang-format-on-save-mode))
+
+(add-hook 'c-mode-hook 'clang-format-on-save-mode)
+(add-hook 'c++-mode-hook 'clang-format-on-save-mode)
+(add-hook 'glsl-mode-hook 'clang-format-on-save-mode)
+
+(add-hook
+  'rst-mode-hook
+  (lambda ()
+    (setq-local fill-column 120)
+    (setq-local indent-tabs-mode nil)
+    (setq-local tab-width 3)
+    (setq-local evil-shift-width 3)
+
+    (add-to-list 'write-file-functions 'delete-trailing-whitespace)
+
+    ;; package: find-file-in-project
+    (setq-local ffip-patterns '("*.rst" "*.py"))))

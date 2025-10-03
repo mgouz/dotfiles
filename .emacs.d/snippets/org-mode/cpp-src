@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: cpp-src
+# key: cpp-src
+# --
+#+begin_src C++
+#include<iostream>
+int main() {
+using std::cout;
+
+cout << "hello wolrd\\n";
+return 0;
+} 
+#+end_src

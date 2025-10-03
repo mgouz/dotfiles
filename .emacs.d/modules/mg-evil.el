@@ -169,7 +169,7 @@
   (evil-define-key '(normal insert motion) 'global (kbd "C-u") 'evil-scroll-up)
   (evil-define-key '(normal insert motion) 'global (kbd "C-k") 'previous-line)
   (evil-define-key '(normal insert motion) 'global (kbd "C-j") 'next-line)
-  (evil-define-key '(insert) 'global (kbd "C-d") 'delete-char)
+  ;; (evil-define-key '(insert) 'global (kbd "C-d") 'delete-char)
 
 
   (evil-set-initial-state 'eshell-mode 'emacs)
@@ -186,9 +186,21 @@
 ;; Useful for fixing a bunch of messed up Evil keybindings that Evil doesn't do by default
 (use-package evil-collection
   :after evil
-  :ensure t
-  :config
+  :ensure t)
+(with-eval-after-load evil-mode
+  ;; (setq docker-map-list '(docker-container-mode-map
+  ;; 			  docker-context-mode-map
+  ;;                         docker-image-mode-map
+  ;;                         docker-machine-mode-map
+  ;;                         docker-network-mode-map
+  ;;                         docker-volume-mode-map))
+  ;; (add-to-list 'evil-collection-mode-list (append evil-collection-mode-list docker-map-list))
   (evil-collection-init))
+
+;; (with-eval-after-load 'docker (evil-collection-docker-setup))
+;; (with-eval-after-load 'info (evil-collection-info-setup))
+;; (with-eval-after-load 'calendar (evil-collection-calendar-setup))
+;; (with-eval-after-load 'dired (evil-collection-dired-setup))
 
 
 
