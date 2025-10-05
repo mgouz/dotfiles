@@ -42,7 +42,7 @@
   (lsp-enable-snippet t)                         ; Important to provide full JSX completion
   (lsp-completion-show-kind t)                   ; Optional
   ;; ;; headerline
-  (lsp-headerline-breadcrumb-enable t)  ; Optional, I like the breadcrumbs
+  (lsp-headerline-breadcrumb-enable nil)  ; Optional, I don't need it
   (lsp-headerline-breadcrumb-enable-diagnostics nil) ; Don't make them red, too noisy
   ;; (lsp-headerline-breadcrumb-enable-symbol-numbers nil)
   ;; (lsp-headerline-breadcrumb-icons-enable nil)
@@ -57,9 +57,12 @@
   ;; (lsp-lens-enable nil)                 ; Optional, I don't need it
   ;; ;; semantic
   (lsp-semantic-tokens-enable nil)      ; Related to highlighting, and we defer to treesitter
+  :config
+  (setq lsp-auto-guess-root t) ; allow single scripts
+
 
   :init
-  (setq lsp-use-plists t))
+  (setq lsp-use-plists t)) 
 
 ;; (use-package dap-mode)
 
@@ -142,6 +145,7 @@
   ;; (define-key dap-mode-map (kbd "<f9>") 'dap-step-out)
   ;; (define-key dap-mode-map (kbd "<f10>") 'dap-breakpoint-toggle)
   )
+
 (with-eval-after-load 'lsp-mode
   (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
   (require 'dap-cpptools)

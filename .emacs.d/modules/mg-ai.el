@@ -5,7 +5,7 @@
 
 (gptel-make-gh-copilot "Copilot")
 
-(use-package mcp
+ (use-package mcp
   :ensure t
   :after gptel
   :custom (mcp-hub-servers
