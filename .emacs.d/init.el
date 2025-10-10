@@ -248,13 +248,28 @@
   (setq ispell-program-name "aspell")
 
   ;; Make Flymake run in all programming buffers
-  (add-hook 'prog-mode-hook 'flymake-mode)
   (add-hook 'org-mode-hook 'flyspell-mode)
   (add-hook 'mhtml-mode-hook 'emmet-mode)
+  (add-hook 'prog-mode-hook 'flymake-mode)
+
+;; (use-package flycheck
+;;   :ensure t
+;;   :bind (:map flycheck-mode-map
+;; 			  ("M-n" . flycheck-next-error) ; optional but recommended error navigation
+;; 			  ("M-p" . flycheck-previous-error))
+;;   :init (global-flycheck-mode))
+
+
+;; (with-eval-after-load 'flycheck
+;;   (use-package consult-flycheck
+;; 	:ensure t
+;;   :bind (:map flycheck-mode-map
+;; 			  ("gh" . consult-flycheck))))
+
 
   (use-package flymake
     :config
-    (setq flymake-show-diagnostics-at-end-of-line nil)
+    (setq flymake-show-diagnostics-at-end-of-line t)
     (setq flymake-no-changes-timeout 0.5)
     :bind (:map flymake-mode-map
                 ("M-n" . flymake-goto-next-error) ; optional but recommended error navigation
@@ -372,13 +387,15 @@
  '(package-selected-packages
    '(aider aidermacs all-the-icons cape catppuccin-theme copilot corfu
 	   dap-mode dape diff-hl disaster docker dockerfile-mode
-	   doom-modeline doom-themes ein embark-consult emmet-mode
-	   evil-collection evil-nerd-commenter evil-snipe
-	   evil-surround forge go-mode gptel leetcode lsp-tailwindcss
-	   lsp-ui marginalia mcp meson-mode multiple-cursors nix-mode
-	   orderless org-roam perspective projectile quickrun
-	   restclient rust-mode smartparens treemacs-evil vertico
-	   vterm yasnippet-snippets)))
+	   doom-modeline doom-themes dtrace-script-mode ein
+	   embark-consult emmet-mode evil-collection
+	   evil-nerd-commenter evil-snipe evil-surround flycheck
+	   flycheck-dtrace forge glsl-mode go-mode gptel leetcode
+	   lsp-tailwindcss lsp-ui lua-mode magit-todos marginalia mcp
+	   meson-mode multiple-cursors ninja-mode nix-mode orderless
+	   org-roam perspective projectile quickrun restclient
+	   rust-mode smartparens treemacs-evil treemacs-projectile
+	   vertico vterm yasnippet-snippets)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -387,6 +404,27 @@
  )
 (use-package forge
   :after magit)
+
+
+(use-package hl-todo
+    :ensure t
+    :config
+    (global-hl-todo-mode t))
+
+(setq hl-todo-keyword-faces
+        '(("TODO" . "green")
+          ("FIXME" . "pink")
+          ("BUG" . "red")
+	  ("NOTE" . "yellow")
+	  ("HACK" . "orange")
+	  ("REVIEW" . "blue")
+	  ("DEPRECATED" . "purple")))
+
+(use-package magit-todos
+  :ensure t
+  :after magit
+  :config (magit-todos-mode 1))
+
 
 
 ;; Setting pkgconf variable for pdf-tools install 
@@ -567,12 +605,12 @@
 (use-package docker
   :ensure t)
 
-(use-package clang-format
-  :commands (clang-format-buffer clang-format-on-save-mode))
+;; (use-package clang-format
+;;   :commands (clang-format-buffer clang-format-on-save-mode))
 
-(add-hook 'c-mode-hook 'clang-format-on-save-mode)
-(add-hook 'c++-mode-hook 'clang-format-on-save-mode)
-(add-hook 'glsl-mode-hook 'clang-format-on-save-mode)
+;; (add-hook 'c-mode-hook 'clang-format-on-save-mode)
+;; (add-hook 'c++-mode-hook 'clang-format-on-save-mode)
+;; (add-hook 'glsl-mode-hook 'clang-format-on-save-mode)
 
 (add-hook
   'rst-mode-hook

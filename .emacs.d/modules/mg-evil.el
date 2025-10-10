@@ -22,6 +22,12 @@
   (evil-define-key 'normal  'global (kbd "<leader>/")  'consult-line) ;; was evil-search-forward
   (evil-define-key 'normal  'global (kbd "C-z")  'suspend-frame)
   (evil-define-key 'normal  'global (kbd "C-x C-z")  'evil-emacs-state)
+  (evil-define-key 'normal  'global (kbd "C-w g C-]")  (lambda ()
+							 "Split window and go to definition"
+							 (interactive)
+							 (split-window-right)
+							 (windmove-right)
+							 (evil-goto-definition)))
 
 
 
@@ -46,20 +52,31 @@
   (evil-define-key 'normal 'global (kbd "s-p")  'projectile-find-file)
   (evil-define-key 'normal 'global (kbd "<leader>pp")  'projectile-switch-project)
   (evil-define-key 'normal 'global (kbd "<leader>pk")  'projectile-kill-buffers)
-  (evil-define-key 'normal 'global (kbd "<leader>pT")  'projectile-test-project)
   (evil-define-key 'normal 'global (kbd "<leader>pt")  'projectile-test-project)
-  (evil-define-key 'normal 'global (kbd "<leader>pi")  'projectile-install-project)
+  (evil-define-key 'normal 'global (kbd "<leader>pI")  'projectile-ibuffer)
   (evil-define-key 'normal 'global (kbd "<leader>pc")  'projectile-compile-project)
   (evil-define-key 'normal 'global (kbd "<leader>pX")  'projectile-run-vterm-other-window)
   (evil-define-key 'normal 'global (kbd "s-j")  'projectile-run-vterm-other-window) ;; 
   (evil-define-key 'normal 'global (kbd "<leader>pd")  'project-find-dir)
-  (evil-define-key 'normal 'global (kbd "<leader>pD")  'projectile-find-dir-other-window)
+  (evil-define-key 'normal 'global (kbd "<leader>pD")  'projectile-dired)
   (evil-define-key 'normal 'global (kbd "<leader>pr")  'project-query-replace-regexp)
   (evil-define-key 'normal 'global (kbd "<leader>pg")  'consult-ripgrep)
   (evil-define-key 'normal 'global (kbd "<leader>pv")  'magit)
-  (evil-define-key 'normal 'global (kbd "<leader>p!")  'project-run-shell-command-in-root)
-  (evil-define-key 'normal 'global (kbd "<leader>p!")  'project-run-shell-command-in-root)
+  (evil-define-key 'normal 'global (kbd "<leader>p!")  'projectile-run-shell-command-in-root)
+  (evil-define-key 'normal 'global (kbd "<leader>p&")  'projectile-run-async-shell-command-in-root)
+
+  ;; Porjectile LifeCycle commands (use projectile-comint-mode to make compilation buffers editable)
+  (evil-define-key 'normal 'global (kbd "<leader>pxp")  'projectile-switch-project)
+  (evil-define-key 'normal 'global (kbd "<leader>pxk")  'projectile-kill-buffers)
+  (evil-define-key 'normal 'global (kbd "<leader>pxt")  'projectile-test-project)
+  (evil-define-key 'normal 'global (kbd "<leader>pxi")  'projectile-install-project)
+  (evil-define-key 'normal 'global (kbd "<leader>pxc")  'projectile-compile-project)
+  (evil-define-key 'normal 'global (kbd "<leader>pxr")  'projectile-run-project)
+  (evil-define-key 'normal 'global (kbd "<leader>pxo")  'projectile-configure-project)
+  (evil-define-key 'normal 'global (kbd "<leader>po")  'projectile-configure-project)
   ;; (evil-define-key 'normal 'global (kbd "<leader>pe")  'projectile-run-vterm-other-window)
+  ;; (setq projectile-comint-mode t)
+
 
   ;; Projectile settings
   (evil-define-key 'normal 'global (kbd "<leader>C-.")  'persp-switch)
@@ -187,15 +204,16 @@
 (use-package evil-collection
   :after evil
   :ensure t)
-(with-eval-after-load evil-mode
-  ;; (setq docker-map-list '(docker-container-mode-map
-  ;; 			  docker-context-mode-map
-  ;;                         docker-image-mode-map
-  ;;                         docker-machine-mode-map
-  ;;                         docker-network-mode-map
-  ;;                         docker-volume-mode-map))
-  ;; (add-to-list 'evil-collection-mode-list (append evil-collection-mode-list docker-map-list))
-  (evil-collection-init))
+;; (with-eval-after-load evil-mode
+;;   ;; (setq docker-map-list '(docker-container-mode-map
+;;   ;; 			  docker-context-mode-map
+;;   ;;                         docker-image-mode-map
+;;   ;;                         docker-machine-mode-map
+;;   ;;                         docker-network-mode-map
+;;   ;;                         docker-volume-mode-map))
+;;   ;; (add-to-list 'evil-collection-mode-list (append evil-collection-mode-list docker-map-list))
+;;   (evil-collection-init))
+(evil-collection-init)
 
 ;; (with-eval-after-load 'docker (evil-collection-docker-setup))
 ;; (with-eval-after-load 'info (evil-collection-info-setup))
