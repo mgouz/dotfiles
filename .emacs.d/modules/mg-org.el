@@ -34,7 +34,10 @@
       '(("t" "Todo" entry (file+headline "~/org/gtd.org" "Tasks")
          "* TODO %?\n  %i\n  %a")
         ("j" "Journal" entry (file+datetree "~/org/journal.org")
-         "* %?\nEntered on %U\n  %i\n  %a")))
+         "* %?\nEntered on %U\n  %i\n  %a")
+        ("b" "Blog" entry (file+datetree "~/org/blog.org")
+         "* #TITLE: %?\n  %i\n  %a")
+	))
 
 
 ;;Org-babel changes

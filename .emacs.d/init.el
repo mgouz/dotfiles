@@ -35,14 +35,14 @@
   (find-file user-init-file))
 
 (defun zc ()
-  "Edit the `user-init-file', in other words, this file."
+  "Edit my `zshrc'"
   (interactive)
   (find-file "~/.zshrc"))
 
-(defun restclient ()
-  "Edit the `user-init-file', in other words, this file."
+(defun e-restclient ()
+  "Edit my `restclient' config"
   (interactive)
-  (find-file "~/.zshrc"))
+  (find-file "~/.emacs.d/rest/restclient.http"))
 
 ;; (defvar bootstrap-version)
 ;; (let ((bootstrap-file
@@ -140,7 +140,7 @@
 (require 'mg-completion-minibuffer)
 (require 'mg-completion-point)
 (require 'mg-org)
-(require 'mg-debugging)
+;; (require 'mg-debugging)
 (require 'mg-lsp)
 (require 'mg-ai)
 
@@ -172,6 +172,7 @@
   (keymap-global-set (kbd "s-]") 'next-buffer 1)
   (global-set-key (kbd "s-/") 'evilnc-comment-or-uncomment-lines)
 
+  (global-origami-mode)
   ;; Stop killing wrods when I want to DELETE them
 
   ;; (global-set-key (kbd "C-w") 'delete-region-no-kill)
@@ -237,6 +238,7 @@
   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
   (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
   (repeat-mode)
+  (hl-line-mode 1)
 
   (setq inhibit-startup-message t)
   (set-fringe-mode 10)
@@ -269,7 +271,7 @@
 
   (use-package flymake
     :config
-    (setq flymake-show-diagnostics-at-end-of-line t)
+    (setq flymake-show-diagnostics-at-end-of-line nil)
     (setq flymake-no-changes-timeout 0.5)
     :bind (:map flymake-mode-map
                 ("M-n" . flymake-goto-next-error) ; optional but recommended error navigation
@@ -369,6 +371,9 @@
 
 (use-package vterm
   :ensure t
+  :hook (vterm-mode . (lambda ()
+		       (setq-local global-hl-line-mode nil)))
+  (add-hook 'vterm-mode-hook (evil-emacs-state)
   )
 
 (custom-set-variables
@@ -385,17 +390,20 @@
    '((emacs-lisp . t) (awk . t) (python . t) (js . t) (java . t) (C . t)
      (sqlite . t) (css . t) (lua . t)))
  '(package-selected-packages
-   '(aider aidermacs all-the-icons cape catppuccin-theme copilot corfu
-	   dap-mode dape diff-hl disaster docker dockerfile-mode
-	   doom-modeline doom-themes dtrace-script-mode ein
-	   embark-consult emmet-mode evil-collection
-	   evil-nerd-commenter evil-snipe evil-surround flycheck
-	   flycheck-dtrace forge glsl-mode go-mode gptel leetcode
-	   lsp-tailwindcss lsp-ui lua-mode magit-todos marginalia mcp
-	   meson-mode multiple-cursors ninja-mode nix-mode orderless
-	   org-roam perspective projectile quickrun restclient
-	   rust-mode smartparens treemacs-evil treemacs-projectile
-	   vertico vterm yasnippet-snippets)))
+   '(aider aidermacs all-the-icons cape catppuccin-theme claude-code-ide
+	   copilot corfu dap-mode dape diff-hl disaster docker
+	   dockerfile-mode doom-modeline doom-themes
+	   dtrace-script-mode ein embark-consult emmet-mode
+	   evil-collection evil-nerd-commenter evil-snipe
+	   evil-surround flycheck-dtrace forge glsl-mode go-mode gptel
+	   leetcode lsp-tailwindcss lsp-ui lua-mode magit-todos
+	   marginalia mcp meson-mode multiple-cursors ninja-mode
+	   nix-mode orderless org-roam origami perspective quickrun
+	   restclient rust-mode smartparens treemacs-evil
+	   treemacs-projectile vertico vterm yasnippet-snippets))
+ '(package-vc-selected-packages
+   '((claude-code-ide :url
+		      "https://github.com/manzaltu/claude-code-ide.el"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -473,7 +481,8 @@
 
 ;; This is honestly killing me a bit -- 
 ;; but recursive editing seems pretty powerful so i'll keep it for now
-(setq enable-recursive-minibuffers t)
+;; this is murdering me
+(setq enable-recursive-minibuffers nil)
 
 ;;
 (put 'downcase-region 'disabled nil)
@@ -624,3 +633,7 @@
 
     ;; package: find-file-in-project
     (setq-local ffip-patterns '("*.rst" "*.py"))))
+(setq  warning-minimum-level :error)  ; don't show warning buffer unless error
+;; stop the warning buffer from stealing focus
+(setq warnings-buffer-display-style nil)
+

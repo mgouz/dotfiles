@@ -28,8 +28,16 @@
 							 (split-window-right)
 							 (windmove-right)
 							 (evil-goto-definition)))
+  (evil-define-key 'normal 'global (kbd "s-z")  'evil-undo)
+  (evil-define-key 'normal 'global (kbd "s-Z")  'evil-redo)
 
-
+  ;; Folding 
+  (evil-define-key 'normal 'global (kbd "zM")  'origami-close-all-nodes)
+  (evil-define-key 'normal 'global (kbd "zR")  'origami-open-all-nodes)
+  (evil-define-key 'normal 'global (kbd "za")  'origami-toggle-node)
+  (evil-define-key 'normal 'global (kbd "<TAB>")  'origami-toggle-node)
+  (evil-define-key 'normal 'global (kbd "zc")  'origami-close-node)
+  (evil-define-key 'normal 'global (kbd "zo")  'origami-open-node)
 
 
   ;; Buffer setting
@@ -44,8 +52,8 @@
   (evil-define-key 'normal 'global (kbd "<leader>d")  'dired-jump)
 
   ;; Project settings
-  (evil-define-key 'normal 'global (kbd "<leader>pi")  'consult-project-buffer)
-  (evil-define-key 'normal 'global (kbd "<leader>pb")  'projectile-switch-to-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader>pi")  'projectile-ibuffer)
+  (evil-define-key 'normal 'global (kbd "<leader>pb")  'consult-project-buffer)
   (evil-define-key 'normal 'global (kbd "<leader>pB")  'projectile-switch-to-buffer-other-window)
   (evil-define-key 'normal 'global (kbd "<leader>pf")  'projectile-find-file)
   (evil-define-key 'normal 'global (kbd "<leader>pF")  'projectile-find-file-other-window)
@@ -154,6 +162,7 @@
   (evil-define-key 'normal 'global (kbd "<leader>lf")  'lsp-format-buffer)
   (evil-define-key 'normal 'global (kbd "<leader>lf")  'lsp-format-buffer)
   (evil-define-key 'normal 'global (kbd "s-O")  'lsp-ui-imenu)
+  (evil-define-key 'normal 'global (kbd "s-D")  'dap-debug)
   ;; (evil-define-key 'normal 'global (kbd "<leadlr>k")  'describe-key)
   ;; (evil-define-key 'normal 'global (kbd "<leader>lr")  'xref-find-references)
 

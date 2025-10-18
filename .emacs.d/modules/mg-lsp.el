@@ -5,6 +5,7 @@
          (lsp-mode . lsp-enable-which-key-integration)
          (tsx-ts-mode . lsp-deferred)
 	 (rust-mode . lsp-deferred)
+	 (c-mode . lsp-deferred)
 	 (c++-mode . lsp-deferred)
 	 (python-mode . lsp-deferred)
 	 (go-mode . lsp-deferred)
@@ -90,11 +91,23 @@
   :bind (:map markdown-mode-map
          ("C-c C-e" . markdown-do)))
 
+;; (setq dap-lldb-debug-program '("/path/to/lldb-dap"))
+
+;; (require 'dap-lldb)
+;; (dap-register-debug-template
+;;   "LLDB::Run"
+;;   (list :type "lldb-vscode"
+;;         :cwd nil
+;;         :request "launch"
+;;         :program "${workspaceFolder}/build/main"
+;;         :name "LLDB::Run"))
+
 (use-package dap-mode
   :ensure t
   :after lsp-mode
   :config
   (dap-auto-configure-mode)
+  (setq dap-auto-configure-features '(sessions locals breakpoints expressions controls tooltip))
   ;; (require 'dap-lldb)
   ;; (require 'dap-gdb-lldb)
   ;; (dap-gdb-lldb-setup)
@@ -104,6 +117,7 @@
   (require 'dap-chrome)
   ;; (require 'dap-firefox)
   (require 'dap-cpptools)
+  (dap-cpptools-setup)
   ;; (require 'dap-java)
   ;; (require 'dap-netcore)
   (require 'dap-dlv-go)
@@ -124,32 +138,42 @@
 		  :args nil
 		  :env nil
 		  :envFile nil))
-  (dap-register-debug-template "C++ :: Debug Emacs"
-			       (list :type "cppdbg"
-			       :request "launch"
-			       :name "Launch Emacs"
-			       :MIMode "gdb"
-			       :miDebuggerPath "/usr/bin/gdb"
-			       :program "/usr/local/bin/emacs"
-			       :args '("-Q" "--debug-init")
-			       :cwd nil
-			       :environment nil
-			       :externalConsole nil
-			       :stopAtEntry t
-			       :setupCommands
-			       ))
-  ;; (define-key dap-mode-map (kbd "<f5>") 'dap-debug)
-  ;; (define-key dap-mode-map (kbd "<f6>") 'dap-continue)
-  ;; (define-key dap-mode-map (kbd "<f7>") 'dap-next)
-  ;; (define-key dap-mode-map (kbd "<f8>") 'dap-step-in)
-  ;; (define-key dap-mode-map (kbd "<f9>") 'dap-step-out)
-  ;; (define-key dap-mode-map (kbd "<f10>") 'dap-breakpoint-toggle)
+(setq dap-ui-marker-face '((t (:inherit error :inverse-video t))))
+
+;;   (require 'dap-gdb)
+;;   (require 'dap-lldb)
+
+;; (dap-register-debug-template
+;;   "C++ :: Debug Emacs"
+;;   (list :name "C++ :: Debug Emacs"
+;;         :type "gdb"
+;;         :request "launch"
+;;         :args ""
+;;         :program "./~/projects/opengl/build/learnopengl"
+;;         :cwd ""
+;;         :stopAtEntry t))
+  (define-key dap-mode-map (kbd "<f5>") 'dap-debug)
+  (define-key dap-mode-map (kbd "<f6>") 'dap-continue)
+  (define-key dap-mode-map (kbd "<f7>") 'dap-next)
+  (define-key dap-mode-map (kbd "<f8>") 'dap-step-in)
+  (define-key dap-mode-map (kbd "<f9>") 'dap-step-out)
+  (define-key dap-mode-map (kbd "<f10>") 'dap-breakpoint-toggle)
   )
 
 (with-eval-after-load 'lsp-mode
   (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
   (require 'dap-cpptools)
-  (yas-global-mode))
+  (yas-global-mode)
+  (dap-register-debug-template
+  "cpptools::Run Configuration"
+  (list :type "cppdbg"
+        :request "launch"
+        :name "cpptools::Run Configuration"
+        :MIMode "lldb"
+        :program "${workspaceFolder}/build/main"
+        :cwd "${workspaceFolder}")))
+
+
 (use-package lsp-ui
   :ensure t
   :commands
@@ -173,12 +197,34 @@
   (add-to-list 'lsp-language-id-configuration '(tsx-ts-mode . "typescriptreact"))
   (add-to-list 'lsp-language-id-configuration '(jsx-ts-mode . "typescriptreact"))
 
+  ;; ------------------ Register additional lsp clients -------------------- 
   (lsp-register-client
    (make-lsp-client
     :new-connection (lsp-stdio-connection '("tailwindcss-language-server" "--stdio"))
     :activation-fn (lsp-activate-on "typescriptreact")
     :server-id 'tailwindcss
     :add-on? t
-    :priority -1)))
+    :priority -1))
+  ;; GLSL Analyzer LSP: Doesn't seem to have diagnostics, but at least it works
+  ;; You do have to build from source but it's zig and not C++ so the build is easy
+  (lsp-register-client
+   (make-lsp-client
+    :new-connection (lsp-stdio-connection '("glsl_analyzer" "--stdio"))
+    :activation-fn (lsp-activate-on "glsl")
+    :server-id 'glsl-analyzer
+    :add-on? t
+    :priority -1))
+
+  ;; For whatever reason, this doesn't work properly when I try to configure it for opengl
+  ;; it also doesn't recognize glsl file extensions so I have to set the file as .frag or .vert (I believe)
+  ;; (lsp-register-client
+  ;;  (make-lsp-client
+  ;;   :new-connection (lsp-stdio-connection '("glslls" "--target-env opengl --stdin"))
+  ;;   :activation-fn (lsp-activate-on "glsl")
+  ;;   :server-id 'glsl-language-server
+  ;;   :add-on? t
+  ;;   :priority -1))
+  )
+
 
 (provide 'mg-lsp)

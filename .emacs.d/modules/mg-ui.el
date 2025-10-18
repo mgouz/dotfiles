@@ -34,7 +34,7 @@
   ;; DEFAULT FTW 
   ;; (load-theme 'doom-1337 t)
   ;; (load-theme 'doom-henna t)
-  (load-theme 'catppuccin t)
+  ;; (load-theme 'catppuccin t)
 
   ;; Enable flashing mode-line on errors
   ;;(doom-themes-visual-bell-config)

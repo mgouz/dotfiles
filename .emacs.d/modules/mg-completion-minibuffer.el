@@ -2,7 +2,7 @@
   :ensure t
   :custom
   (vertico-scroll-margin 0) ;; Different scroll margin
-  (vertico-count 15) ;; Show more candidates
+  (vertico-count 5) ;; Show more candidates
   (vertico-resize nil) ;; Grow and shrink the Vertico minibuffer
   (vertico-cycle t) ;; Enable cycling for `vertico-next/previous'
   :init
