@@ -34,7 +34,7 @@
   ;; DEFAULT FTW 
   ;; (load-theme 'doom-1337 t)
   ;; (load-theme 'doom-henna t)
-  ;; (load-theme 'catppuccin t)
+  (load-theme 'catppuccin t)
 
   ;; Enable flashing mode-line on errors
   ;;(doom-themes-visual-bell-config)
@@ -49,6 +49,9 @@
 ;(setq catppuccin-flavor 'mocha) ;; or 'frappe 'latte, 'macchiato, or 'mocha
 ;; (with-eval-after-load 'catppuccin-get-color
 ;;   (load-theme 'catppuccin t))
+
+(with-eval-after-load 'spacemacs-theme
+  (load-theme 'spacemacs-light t))
 
 (provide 'mg-ui)
 ;;; mg-ui.el ends here

@@ -1,8 +1,10 @@
-; setq warning-minimum-level :error  ; don't show warning buffer unless error
+;; -*- lexical-binding: t; -*-
+;; setq warning-minimum-level :error  ; don't show warning buffer unless error
 					; (setq org-directory "~/org/")
-(setq org-clock-sound t)
+;; (setq org-clock-sound t)
 
 ;; My Init file
+
 
 ;;; THIS NEEDS TO BE AT THE TOP
 (require 'package)
@@ -10,6 +12,8 @@
 (package-initialize)
 
 (add-to-list 'load-path "./modules")
+
+(setq vc-follow-symlinks t) ; Follow symlinks automatically
 
 (let ((backup-dir "~/tmp/emacs/backups")
       (auto-saves-dir "~/tmp/emacs/auto-saves/"))
@@ -69,6 +73,7 @@
   (setq use-package-always-ensure t))
 
 (require 'use-package)
+;; (require 'iedit)
 
 (setq lsp-use-plists t)
 
@@ -173,6 +178,7 @@
   (global-set-key (kbd "s-/") 'evilnc-comment-or-uncomment-lines)
 
   (global-origami-mode)
+  (hl-line-mode 1)
   ;; Stop killing wrods when I want to DELETE them
 
   ;; (global-set-key (kbd "C-w") 'delete-region-no-kill)
@@ -337,22 +343,76 @@
   :init
   (persp-mode))
 
-(setq treesit-language-source-alist
-      '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-	(cmake "https://github.com/uyha/tree-sitter-cmake")
-	(css "https://github.com/tree-sitter/tree-sitter-css")
-	(elisp "https://github.com/Wilfred/tree-sitter-elisp")
-	(go . "https://github.com/tree-sitter/tree-sitter-go")
-	(html "https://github.com/tree-sitter/tree-sitter-html")
-	(javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-	(json "https://github.com/tree-sitter/tree-sitter-json")
-	(make "https://github.com/alemuller/tree-sitter-make")
-	(markdown "https://github.com/ikatyang/tree-sitter-markdown")
-	(python "https://github.com/tree-sitter/tree-sitter-python")
-	(toml "https://github.com/tree-sitter/tree-sitter-toml")
-	(tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-	(typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-	(yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+
+(use-package treesit
+  :mode (("\\.tsx\\'" . tsx-ts-mode))
+  :preface
+  (defun mp-setup-install-grammars ()
+    "Install Tree-sitter grammars if they are absent."
+    (interactive)
+    (dolist (grammar
+             ;; Note the version numbers. These are the versions that
+             ;; are known to work with Combobulate *and* Emacs.
+             '((css . ("https://github.com/tree-sitter/tree-sitter-css" "v0.20.0"))
+               (go . ("https://github.com/tree-sitter/tree-sitter-go" "v0.20.0"))
+               (html . ("https://github.com/tree-sitter/tree-sitter-html" "v0.20.1"))
+               (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "v0.20.1" "src"))
+               (json . ("https://github.com/tree-sitter/tree-sitter-json" "v0.20.2"))
+               (markdown . ("https://github.com/ikatyang/tree-sitter-markdown" "v0.7.1"))
+               (python . ("https://github.com/tree-sitter/tree-sitter-python" "v0.20.4"))
+               (rust . ("https://github.com/tree-sitter/tree-sitter-rust" "v0.21.2"))
+               (toml . ("https://github.com/tree-sitter/tree-sitter-toml" "v0.5.1"))
+               (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src"))
+               (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src"))
+               (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))
+	       (make "https://github.com/alemuller/tree-sitter-make")
+	       (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+	       (cpp . ("https://github.com/tree-sitter/tree-sitter-cpp"))
+	       (c . ("https://github.com/tree-sitter/tree-sitter-c"))
+               (toml "https://github.com/tree-sitter/tree-sitter-toml")
+	       (bash "https://github.com/tree-sitter/tree-sitter-bash")
+	       (cmake "https://github.com/uyha/tree-sitter-cmake")))
+      (add-to-list 'treesit-language-source-alist grammar)
+      ;; Only install `grammar' if we don't already have it
+      ;; installed. However, if you want to *update* a grammar then
+      ;; this obviously prevents that from happening.
+      (unless (treesit-language-available-p (car grammar))
+        (treesit-install-language-grammar (car grammar)))))
+
+  ;; Optional. Combobulate works in both xxxx-ts-modes and
+  ;; non-ts-modes.
+
+  ;; You can remap major modes with `major-mode-remap-alist'. Note
+  ;; that this does *not* extend to hooks! Make sure you migrate them
+  ;; also
+  (dolist (mapping
+           '((python-mode . python-ts-mode)
+             (css-mode . css-ts-mode)
+             (typescript-mode . typescript-ts-mode)
+             (js2-mode . js-ts-mode)
+             (bash-mode . bash-ts-mode)
+             (conf-toml-mode . toml-ts-mode)
+             (go-mode . go-ts-mode)
+             (css-mode . css-ts-mode)
+             (json-mode . json-ts-mode)
+             (js-json-mode . json-ts-mode)))
+    (add-to-list 'major-mode-remap-alist mapping))
+  :config
+  (mp-setup-install-grammars))
+  ;; Do not forget to customize Combobulate to your liking:
+  ;;
+  ;;  M-x customize-group RET combobulate RET
+  ;;
+  ;; (use-package combobulate
+  ;;   :custom
+  ;;   ;; You can customize Combobulate's key prefix here.
+  ;;   ;; Note that you may have to restart Emacs for this to take effect!
+  ;;   (combobulate-key-prefix "C-c o")
+  ;;   :hook ((prog-mode . combobulate-mode))
+  ;;   ;; Amend this to the directory where you keep Combobulate's source
+  ;;   ;; code.
+  ;;   :load-path ("path-to-git-checkout-of-combobulate")))
+
 
 ;; (add-to-list 'eglot-server-programs '((js-mode typescript-mode) . (eglot-deno "deno" "lsp")))
 ;; (defclass eglot-deno (eglot-lsp-server) ()
@@ -372,9 +432,8 @@
 (use-package vterm
   :ensure t
   :hook (vterm-mode . (lambda ()
-		       (setq-local global-hl-line-mode nil)))
-  (add-hook 'vterm-mode-hook (evil-emacs-state)
-  )
+			(setq-local global-hl-line-mode nil)))
+  (add-hook 'vterm-mode-hook (evil-emacs-state))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -487,16 +546,29 @@
 ;;
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
+(delete-selection-mode 1)
+
+;; Allow emacs to use the system clipboard
+;; (setq select-enable-clipboard t)
 (setq x-select-enable-clipboard t)
 
-;; Make it so that that you delete a region instead of kill it
-(delete-selection-mode)
+;; Save clipboard strings into kill ring before replacing them.
+(setq save-interprogram-paste-before-kill t)
+
+;; Stop saving text that is kill into the kill ring
+;; I only want stuff I purposely copy to be saved
+;; (setq kill-transform-function (lambda (string) nil))
+
+
+;; --------------------------------
 
 ;; Make it so that you highlight a line 
-(hl-line-mode)
+(hl-line-mode t)
 
 ;; Go back and forward different layouts using C-c <arrows>
-(winner-mode)
+(winner-mode t)
+
+
 
 ;; ;; Try to get Poke working for better binary data mangling 
 ;; (add-to-list 'load-path
@@ -614,6 +686,38 @@
 (use-package docker
   :ensure t)
 
+(use-package dockerfile-mode
+  :ensure t
+  :mode ("Dockerfile\\'" . dockerfile-mode))
+
+(use-package glsl-mode
+  :ensure t
+  :mode ("\\.glsl\\'" . glsl-mode))
+
+(use-package ninja-mode
+  :ensure t
+  :mode ("\\.ninja\\'" . ninja-mode))
+
+(use-package meson-mode
+  :ensure t
+  :mode ("meson\\.build\\'" . meson-mode))
+
+(use-package cmake-mode
+  :ensure t
+  :mode ("CMakeLists\\.txt\\'" . cmake-mode)
+  :mode ("\\.cmake\\'" . cmake-mode))
+
+(use-package dtrace-script-mode
+  :ensure t
+  :mode ("\\.d\\'" . dtrace-script-mode))
+
+
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (when (memq window-system '(mac ns x))
+	(exec-path-from-shell-initialize)))
+
 ;; (use-package clang-format
 ;;   :commands (clang-format-buffer clang-format-on-save-mode))
 
@@ -634,6 +738,9 @@
     ;; package: find-file-in-project
     (setq-local ffip-patterns '("*.rst" "*.py"))))
 (setq  warning-minimum-level :error)  ; don't show warning buffer unless error
+(setq  display-warning-minimum-level :error)  ; don't show warning buffer unless error
+(setq switch-to-buffer-obey-display-actions t) ;; Emacs should obey display actions when switching buffers
+
 ;; stop the warning buffer from stealing focus
 (setq warnings-buffer-display-style nil)
 

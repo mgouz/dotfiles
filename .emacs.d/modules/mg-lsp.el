@@ -9,6 +9,8 @@
 	 (c++-mode . lsp-deferred)
 	 (python-mode . lsp-deferred)
 	 (go-mode . lsp-deferred)
+	 (glsl-mode . lsp-deferred)
+	 (zig-mode . lsp-deferred)
 	 (typescript-mode . lsp-deferred)
 	 (typescript-ts-mode . lsp-deferred))
   :custom
@@ -81,9 +83,10 @@
   :after (lsp-mode evil)
   :config (setq lsp-ui-doc-enable t
                 evil-lookup-func #'lsp-ui-doc-glance ; Makes K in evil-mode toggle the doc for symbol at point
-                ;; lsp-ui-doc-show-with-cursor nil      ; Don't show doc when cursor is over symbol - too distracting
+                lsp-ui-doc-show-with-cursor nil      ; Don't show doc when cursor is over symbol - too distracting
                 lsp-ui-doc-include-signature t       ; Show signature
                 lsp-ui-doc-position 'at-point))
+
 (use-package markdown-mode
   :ensure t
   :mode ("README\\.md\\'" . gfm-mode)
@@ -173,20 +176,6 @@
         :program "${workspaceFolder}/build/main"
         :cwd "${workspaceFolder}")))
 
-
-(use-package lsp-ui
-  :ensure t
-  :commands
-  (lsp-ui-doc-show
-   lsp-ui-doc-glance)
-  :bind (:map lsp-mode-map
-              ("C-c C-d" . 'lsp-ui-doc-glance))
-  :after (lsp-mode evil)
-  :config (setq lsp-ui-doc-enable t
-                evil-lookup-func #'lsp-ui-doc-glance ; Makes K in evil-mode toggle the doc for symbol at point
-                lsp-ui-doc-show-with-cursor nil      ; Don't show doc when cursor is over symbol - too distracting
-                lsp-ui-doc-include-signature t       ; Show signature
-                lsp-ui-doc-position 'at-point))
 
 (use-package lsp-eslint
   :demand t

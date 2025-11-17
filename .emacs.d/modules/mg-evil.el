@@ -14,6 +14,7 @@
 (use-package evil
   :ensure t ;; install the evil package if not installed
   :config 
+  (global-evil-mc-mode 1)
   ;; Don't set emacs mode because it can affect
   (evil-set-leader '(normal motion) (kbd "SPC")) ;; Has issues in Info mode, finder, ibuffer, and dired
   (evil-define-key 'normal  'global  (kbd "<leader>.")  'find-file)
@@ -30,12 +31,48 @@
 							 (evil-goto-definition)))
   (evil-define-key 'normal 'global (kbd "s-z")  'evil-undo)
   (evil-define-key 'normal 'global (kbd "s-Z")  'evil-redo)
+  ;; evil-multiedit
+(evil-define-key 'normal 'global
+  (kbd "s-d")   #'evil-multiedit-match-symbol-and-next
+  (kbd "s-D")   #'evil-multiedit-match-symbol-and-prev)
+(evil-define-key 'visual 'global
+  "R"           #'evil-multiedit-match-all
+  (kbd "s-d")   #'evil-multiedit-match-and-next
+  (kbd "s-D")   #'evil-multiedit-match-and-prev)
+(evil-define-key '(visual normal) 'global
+  (kbd "C-M-d") #'evil-multiedit-restore)
+
+(with-eval-after-load 'evil-mutliedit
+  (evil-define-key 'multiedit 'global
+    (kbd "s-d")   #'evil-multiedit-match-and-next
+    (kbd "s-D") #'evil-multiedit-match-and-prev
+    (kbd "RET")   #'evil-multiedit-toggle-or-restrict-region)
+  (evil-define-key '(multiedit multiedit-insert) 'global
+    (kbd "C-n")   #'evil-multiedit-next
+    (kbd "C-p")   #'evil-multiedit-prev))
+
+  (evil-define-key '(normal visual) 'global
+  "gzm" #'evil-mc-make-all-cursors
+  "gzu" #'evil-mc-undo-all-cursors
+  "gzz" #'+evil/mc-toggle-cursors
+  "gzc" #'+evil/mc-make-cursor-here
+  "gzn" #'evil-mc-make-and-goto-next-cursor
+  "gzp" #'evil-mc-make-and-goto-prev-cursor
+  "gzN" #'evil-mc-make-and-goto-last-cursor
+  "gzP" #'evil-mc-make-and-goto-first-cursor)
+
+  (with-eval-after-load 'evil-mc
+  (evil-define-key '(normal visual) evil-mc-key-map
+    (kbd "C-n") #'evil-mc-make-and-goto-next-cursor
+    (kbd "C-N") #'evil-mc-make-and-goto-last-cursor
+    (kbd "C-p") #'evil-mc-make-and-goto-prev-cursor
+    (kbd "C-P") #'evil-mc-make-and-goto-first-cursor))
 
   ;; Folding 
   (evil-define-key 'normal 'global (kbd "zM")  'origami-close-all-nodes)
   (evil-define-key 'normal 'global (kbd "zR")  'origami-open-all-nodes)
   (evil-define-key 'normal 'global (kbd "za")  'origami-toggle-node)
-  (evil-define-key 'normal 'global (kbd "<TAB>")  'origami-toggle-node)
+  ;; (evil-define-key 'normal 'global (kbd "<TAB>")  'origami-toggle-node)
   (evil-define-key 'normal 'global (kbd "zc")  'origami-close-node)
   (evil-define-key 'normal 'global (kbd "zo")  'origami-open-node)
 
@@ -64,7 +101,14 @@
   (evil-define-key 'normal 'global (kbd "<leader>pI")  'projectile-ibuffer)
   (evil-define-key 'normal 'global (kbd "<leader>pc")  'projectile-compile-project)
   (evil-define-key 'normal 'global (kbd "<leader>pX")  'projectile-run-vterm-other-window)
-  (evil-define-key 'normal 'global (kbd "s-j")  'projectile-run-vterm-other-window) ;; 
+  (evil-define-key 'normal 'global (kbd "s-j")  '(lambda ()
+						   (interactive)
+						   (let ((root-window (frame-root-window)))
+						     ;; Split the root window
+						     (select-window root-window)
+						     (split-window-below)
+						     ;; Move to the window below
+						     (other-window 1))))
   (evil-define-key 'normal 'global (kbd "<leader>pd")  'project-find-dir)
   (evil-define-key 'normal 'global (kbd "<leader>pD")  'projectile-dired)
   (evil-define-key 'normal 'global (kbd "<leader>pr")  'project-query-replace-regexp)
@@ -192,6 +236,8 @@
   ;; (evil-define-key '(normal insert) 'global (kbd "C-n") 'next-line)
   (evil-define-key '(insert motion ) 'global (kbd "C-a") 'move-beginning-of-line)
   (evil-define-key '(insert motion ) 'global (kbd "C-e") 'move-end-of-line)
+  (evil-define-key '(insert motion ) 'global (kbd "C-f") 'forward-char)
+  (evil-define-key '(insert motion ) 'global (kbd "C-b") 'backward-char)
   (evil-define-key '(normal insert motion) 'global (kbd "C-u") 'evil-scroll-up)
   (evil-define-key '(normal insert motion) 'global (kbd "C-k") 'previous-line)
   (evil-define-key '(normal insert motion) 'global (kbd "C-j") 'next-line)
