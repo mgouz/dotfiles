@@ -97,7 +97,9 @@ alias v="nvim"
 alias vim="nvim"
 alias mux=tmuxinator
 alias hm="$EDITOR ~/.config/home-manager/home.nix"
+alias edarwin="sudo $EDITOR /etc/nix-darwin/flake.nix "
 alias editscripts="$EDITOR ~/.dotfiles/bin"
+memusage() { ps -o rss= -p "$1" | awk '{printf "%.2f MB\n", $1/1024}'; }
 
 export PATH="/usr/local/sbin:$PATH"
 export PATH="/usr/local/bin:$PATH"
@@ -137,8 +139,9 @@ alias pyhome="source ~/.venv/bin/activate" # activate global virtual env
 
 # export NODE_PATH=$(npm root -g)
 # ---- Node Scripting ----
-export NODE_PATH="$NODE_PATH:$(pnpm list --global | grep 'pnpm')/node_modules"
+# export NODE_PATH="$NODE_PATH:$(pnpm list --global | grep 'pnpm')/node_modules"
 export NODE_PATH="$NODE_PATH:$(npm root -g)"
+# export NODE_PATH="$NODE_PATH:$(bun root -g)"
 
 # ------------------------
 
@@ -149,6 +152,7 @@ export PATH="$HOME/vcpkg:$PATH"
 export CPATH="$CPATH:/opt/homebrew/include/"
 export PATH="$HOME/go/bin:$PATH"
 export PATH="/Users/mattgouzoulis/.bun/bin:$PATH"
+# export PATH="/Applications/love.app/Contents/MacOS/:$PATH"
 
 
 # Load Angular CLI autocompletion.
