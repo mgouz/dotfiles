@@ -181,6 +181,7 @@
   (evil-define-key 'normal 'global (kbd "<leader>hi")  'info)
   (evil-define-key 'normal 'global (kbd "<leader>hm")  'describe-mode)
   (evil-define-key 'normal 'global (kbd "<leader>hP")  'describe-package)
+  (evil-define-key 'normal 'global (kbd "<leader>hp")  'finder-by-keyword)
   (evil-define-key 'normal 'global (kbd "<leader>ha")  'apropos)
   (evil-define-key 'normal 'global (kbd "<leader>h'")  'describe-char)
 

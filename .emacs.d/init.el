@@ -48,24 +48,6 @@
   (interactive)
   (find-file "~/.emacs.d/rest/restclient.http"))
 
-;; (defvar bootstrap-version)
-;; (let ((bootstrap-file
-;;        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-;;       (bootstrap-version 6))
-;;   (unless (file-exists-p bootstrap-file)
-;;     (with-current-buffer
-;;         (url-retrieve-synchronously
-;; 	 "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-;; 	 'silent 'inhibit-cookies)
-;;       (goto-char (point-max))
-;;       (eval-print-last-sexp)))
-;;   (load bootstrap-file nil 'nomessage))
-
-;; (straight-use-package 'use-package)  ;; optional but recommended
-;; (straight-pull-recipe-repositories)
-;; (setq straight-allow-recipe-inheritance nil)
-
-
 ;; bootstrap use-package
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -73,69 +55,8 @@
   (setq use-package-always-ensure t))
 
 (require 'use-package)
-;; (require 'iedit)
 
 (setq lsp-use-plists t)
-
-(when (file-exists-p "/opt/homebrew/Cellar/mu/1.12.8/share/emacs/site-lisp/mu/mu4e")
-  (require 'mu4e)
-  ;; use mu4e for e-mail in emacs
-  (setq mail-user-agent 'mu4e-user-agent)
-  (setq mu4e-drafts-folder "/[Gmail].Drafts")
-  (setq mu4e-sent-folder   "/[Gmail].Sent Mail")
-  (setq mu4e-trash-folder  "/[Gmail].Trash")
-
-
-  ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
-  (setq mu4e-sent-messages-behavior 'delete)
-
-  ;; (See the documentation for `mu4e-sent-messages-behavrio` if you have
-  ;; additional non-Gmail addresses and want to assign them different behavior
-  ;; )
-
-  (setq mu4e-maildir-shortcuts
-	'( (:maildir "/INBOX"              :key ?i)
-	   (:maildir "/[Gmail].Sent Mail"  :key ?s)
-	   (:maildir "/[Gmail].Trash"      :key ?t)
-	   (:maildir "/[Gmail].All Mail"   :key ?a)))
-
-  (add-to-list 'mu4e-bookmarks
-	       ;; ':favorite t' i.e. use this one for the modeline
-	       '(:query "maildir:/inbox" :name "Inbox" :key ?i :favorite t))
-
-  ;; allow for updating mail using U in the main view:
-  (setq mu4e-get-mail-command "offlineimap")
-
-  ;; something about ourselves
-  (setq user-mail-address "mattgouzoulis@gmail.com"
-	user-full-name "Matthew Gouozulis"
-	message-signature
-	(concat "Best regards,\n"
-		"Matthew Gouzoulis"))
-
-  ;; sending mail -- replace USERNAME with your gmail username
-  ;; also, make sure the gnutls command line utils are installed
-  (require 'smtpmail)
-  (setq message-send-mail-function 'smtpmail-send-it
-	starttls-use-gnutls t
-	smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
-	smtpmail-auth-credentials
-	'(("smtp.gmail.com" 587 "mattgouzoulis@gmail.com" nil))
-	smtpmail-default-smtp-server "smtp.gmail.com"
-	smtpmail-smtp-server "smtp.gmail.com"
-	smtpmail-smtp-service 587)
-
-  (setq message-kill-buffer-on-exit t)
-
-  ;; use 'fancy' non-ascii characters in various places in mu4e
-  (setq mu4e-use-fancy-chars t)
-
-  ;; save attachment to my desktop (this can also be a function)
-  (setq mu4e-attachment-dir "~/Desktop")
-
-  ;; attempt to show images when viewing messages
-  (setq mu4e-view-show-images t)
-  )
 
 (add-to-list 'load-path (concat user-emacs-directory "/modules"))
 (require 'mg-ui)
@@ -148,6 +69,7 @@
 ;; (require 'mg-debugging)
 (require 'mg-lsp)
 (require 'mg-ai)
+(require 'mg-wm)
 
 (use-package yasnippet
   :ensure t)
@@ -344,8 +266,36 @@
   (persp-mode))
 
 
+
+;; (use-package tree-sitter
+;;   :config
+;;   (require 'tree-sitter-langs)
+  ;; (global-tree-sitter-mode)
+  ;; (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
 (use-package treesit
-  :mode (("\\.tsx\\'" . tsx-ts-mode))
+  :mode (
+	 ("\\.tsx\\'" . tsx-ts-mode)
+  ;; 	 ("\\.ts\\'" . typescript-ts-mode-hook)
+  ;; 	 ("\\.js\\'" . js-ts-mode)
+  ;; 	 ("\\.html\\'" . html-ts-mode)
+  ;; 	 ("\\.css\\'" . css-ts-mode)
+  ;; 	 ("\\.json\\'" . json-ts-mode)
+  ;; 	 ("\\.py\\'" . python-ts-mode)
+  ;; 	 ("\\.go\\'" . go-ts-mode)
+  ;; 	 ("\\.rs\\'" . rust-ts-mode)
+  ;; 	 ("\\.toml\\'" . toml-ts-mode)
+  ;; 	 ("\\.yaml\\'" . yaml-ts-mode)
+  ;; 	 ("\\.md\\'" . markdown-ts-mode)
+	 ("\\.cpp\\'" . c++-ts-mode)
+	 ("\\.cc\\'" . c++-ts-mode)
+  ;; 	 ("\\.hpp\\'" . c++-ts-mode)
+  ;; 	 ("\\.hh\\'" . c++-ts-mode)
+  ;; 	 ("\\.c\\'" . c-ts-mode)
+	 ("\\.h\\'" . c++-ts-mode)
+	 )
+	 
+	 
   :preface
   (defun mp-setup-install-grammars ()
     "Install Tree-sitter grammars if they are absent."
@@ -366,12 +316,12 @@
                (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src"))
                (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))
 	       (make "https://github.com/alemuller/tree-sitter-make")
-	       (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+	       (markdown . ("https://github.com/ikatyang/tree-sitter-markdown"))
 	       (cpp . ("https://github.com/tree-sitter/tree-sitter-cpp"))
 	       (c . ("https://github.com/tree-sitter/tree-sitter-c"))
-               (toml "https://github.com/tree-sitter/tree-sitter-toml")
-	       (bash "https://github.com/tree-sitter/tree-sitter-bash")
-	       (cmake "https://github.com/uyha/tree-sitter-cmake")))
+               (toml . ("https://github.com/tree-sitter/tree-sitter-toml"))
+	       (bash . ("https://github.com/tree-sitter/tree-sitter-bash"))
+	       (cmake . ("https://github.com/uyha/tree-sitter-cmake"))))
       (add-to-list 'treesit-language-source-alist grammar)
       ;; Only install `grammar' if we don't already have it
       ;; installed. However, if you want to *update* a grammar then
@@ -385,18 +335,18 @@
   ;; You can remap major modes with `major-mode-remap-alist'. Note
   ;; that this does *not* extend to hooks! Make sure you migrate them
   ;; also
-  (dolist (mapping
-           '((python-mode . python-ts-mode)
-             (css-mode . css-ts-mode)
-             (typescript-mode . typescript-ts-mode)
-             (js2-mode . js-ts-mode)
-             (bash-mode . bash-ts-mode)
-             (conf-toml-mode . toml-ts-mode)
-             (go-mode . go-ts-mode)
-             (css-mode . css-ts-mode)
-             (json-mode . json-ts-mode)
-             (js-json-mode . json-ts-mode)))
-    (add-to-list 'major-mode-remap-alist mapping))
+  ;; (dolist (mapping
+  ;;          '((python-mode . python-ts-mode)
+  ;;            (css-mode . css-ts-mode)
+  ;;            (typescript-mode . typescript-ts-mode)
+  ;;            (js2-mode . js-ts-mode)
+  ;;            (bash-mode . bash-ts-mode)
+  ;;            (conf-toml-mode . toml-ts-mode)
+  ;;            (go-mode . go-ts-mode)
+  ;;            (css-mode . css-ts-mode)
+  ;;            (json-mode . json-ts-mode)
+  ;;            (js-json-mode . json-ts-mode)))
+  ;;   (add-to-list 'major-mode-remap-alist mapping))
   :config
   (mp-setup-install-grammars))
   ;; Do not forget to customize Combobulate to your liking:
@@ -433,7 +383,7 @@
   :ensure t
   :hook (vterm-mode . (lambda ()
 			(setq-local global-hl-line-mode nil)))
-  (add-hook 'vterm-mode-hook (evil-emacs-state))
+  (add-hook 'vterm-mode-hook evil-emacs-state))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -459,10 +409,15 @@
 	   marginalia mcp meson-mode multiple-cursors ninja-mode
 	   nix-mode orderless org-roam origami perspective quickrun
 	   restclient rust-mode smartparens treemacs-evil
-	   treemacs-projectile vertico vterm yasnippet-snippets))
+	   treemacs-projectile vertico vertico-posframe vterm
+	   yasnippet-snippets))
  '(package-vc-selected-packages
    '((claude-code-ide :url
-		      "https://github.com/manzaltu/claude-code-ide.el"))))
+		      "https://github.com/manzaltu/claude-code-ide.el")))
+ '(safe-local-variable-values
+   '((projectile-project-compilation-cmd
+      . "cmake --build build && ./build/chapterX")
+     (projectile-run-project . "./build/chapterX"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -500,27 +455,6 @@
 
 
 
-
-;; (use-package aider
-;;   :ensure t
-;;   :config
-;;   ;; For latest claude sonnet model
-;;   (setq aider-args '("--model" "github_copilot/gpt-4.1" "--no-auto-accept-architect")) ;; add --no-auto-commits if you don't want it
-;;   (setenv "ANTHROPIC_API_KEY" "")
-;;   ;; Or chatgpt model
-;;   ;; (setq aider-args '("--model" "o4-mini"))
-;;   ;; (setenv "OPENAI_API_KEY" <your-openai-api-key>)
-;;   ;; Or use your personal config file
-;;   ;; (setq aider-args `("--config" ,(expand-file-name "~/.aider.conf.yml")))
-;;   ;; ;;
-;;   ;; Optional: Set a key binding for the transient menu
-;;   (global-set-key (kbd "C-c a") 'aider-transient-menu) ;; for wider screen
-;;   ;; or use aider-transient-menu-2cols / aider-transient-menu-1col, for narrow screen
-;;   (aider-magit-setup-transients) ;; add aider magit function to magit menu
-;;   ;; auto revert buffer
-;;   (global-auto-revert-mode 1)
-;;   (auto-revert-mode 1))
-
 (ignore-errors
   (require 'ansi-color)
   (defun my-colorize-compilation-buffer ()
@@ -555,6 +489,9 @@
 ;; Save clipboard strings into kill ring before replacing them.
 (setq save-interprogram-paste-before-kill t)
 
+;; (setq mouse-yank-at-point t)
+(setq apropos-do-all t)
+
 ;; Stop saving text that is kill into the kill ring
 ;; I only want stuff I purposely copy to be saved
 ;; (setq kill-transform-function (lambda (string) nil))
@@ -567,6 +504,13 @@
 
 ;; Go back and forward different layouts using C-c <arrows>
 (winner-mode t)
+;; This is just winner-mode but for tabs
+(tab-bar-history-mode t) 
+
+(smartparens-global-mode t)
+
+(yas-global-mode t)
+
 
 
 
@@ -636,30 +580,6 @@
 
 (require 'multiple-cursors)
 
-;; (use-package combobulate
-;;   :ensure t
-;;   :preface
-;;   ;; You can customize Combobulate's key prefix here.
-;;   ;; Note that you may have to restart Emacs for this to take effect!
-;;   (setq combobulate-key-prefix "C-c o")
-
-;;   ;; Optional, but recommended.
-;;   ;;
-;;   ;; You can manually enable Combobulate with `M-x
-;;   ;; combobulate-mode'.
-;;   :hook
-;;   ((python-ts-mode . combobulate-mode)
-;;    (js-ts-mode . combobulate-mode)
-;;    (go-mode . go-ts-mode)
-;;    (html-ts-mode . combobulate-mode)
-;;    (css-ts-mode . combobulate-mode)
-;;    (yaml-ts-mode . combobulate-mode)
-;;    (typescript-ts-mode . combobulate-mode)
-;;    (json-ts-mode . combobulate-mode)
-;;    (tsx-ts-mode . combobulate-mode))
-
-  ;; (use-package tsx-mode
-  ;;   :straight '(tsx-mode :type git :host github :repo "orzechowskid/tsx-mode.el" :branch "emacs30")) 
 (use-package treemacs
   :config
   (setq treemacs-position 'right))
@@ -710,6 +630,10 @@
 (use-package dtrace-script-mode
   :ensure t
   :mode ("\\.d\\'" . dtrace-script-mode))
+
+(use-package rust-mode
+  :init
+  (setq rust-mode-treesitter-derive nil))
 
 
 (use-package exec-path-from-shell

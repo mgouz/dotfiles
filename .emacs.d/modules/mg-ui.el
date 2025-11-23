@@ -1,4 +1,4 @@
-;; Add nicer modeline for reading the VC info, major mode, and Flymake syntax errors
+;;; Add nicer modeline for reading the VC info, major mode, and Flymake syntax errors
 (use-package doom-modeline
   :ensure t
   :config
@@ -51,7 +51,16 @@
 ;;   (load-theme 'catppuccin t))
 
 (with-eval-after-load 'spacemacs-theme
-  (load-theme 'spacemacs-light t))
+ (load-theme 'spacemacs-light t))
+ 
+;; (use-package vertico
+;;   :config
+;;   (vertico-mode)
+;;   (vertico-multiform-mode)
+;;   (setq vertico-multiform-commands
+;;         '((consult-buffer buffer)
+;;           (consult-find buffer)
+;;           (t posframe))))
 
 (provide 'mg-ui)
 ;;; mg-ui.el ends here

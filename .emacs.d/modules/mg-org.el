@@ -2,6 +2,12 @@
 ;; Configuration for org and stuff
 (require 'org)
 
+(use-package writeroom-mode
+  :ensure t
+  :commands (writeroom-mode)
+  :init
+  (setq writeroom-width 100))
+
 ;; Org-mode setup
 (use-package org-roam
   :ensure t
