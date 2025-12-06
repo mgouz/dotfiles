@@ -6,11 +6,18 @@
          (tsx-ts-mode . lsp-deferred)
 	 (rust-mode . lsp-deferred)
 	 (c-mode . lsp-deferred)
+	 (c-ts-mode . lsp-deferred)
 	 (c++-mode . lsp-deferred)
+	 (c++-ts-mode . lsp-deferred)
 	 (python-mode . lsp-deferred)
+	 (python-ts-mode . lsp-deferred)
+	 (java-ts-mode . lsp-deferred)
 	 (go-mode . lsp-deferred)
 	 (glsl-mode . lsp-deferred)
 	 (zig-mode . lsp-deferred)
+	 (js-mode . lsp-deferred)
+	 (js-ts-mode . lsp-deferred)
+	 (java-ts-mode . lsp-deferred)
 	 (typescript-mode . lsp-deferred)
 	 (typescript-ts-mode . lsp-deferred))
   :custom
@@ -214,6 +221,13 @@
   ;;   :add-on? t
   ;;   :priority -1))
   )
+
+(use-package lsp-java
+  :ensure t
+  :after lsp-mode
+  :config
+  (setq lsp-java-format-enabled t) ; Disable formatting, I use prettier)
+(add-hook 'java-mode-hook #'lsp)
 
 
 (provide 'mg-lsp)

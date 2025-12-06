@@ -69,12 +69,12 @@
     (kbd "C-P") #'evil-mc-make-and-goto-first-cursor))
 
   ;; Folding 
-  (evil-define-key 'normal 'global (kbd "zM")  'origami-close-all-nodes)
-  (evil-define-key 'normal 'global (kbd "zR")  'origami-open-all-nodes)
-  (evil-define-key 'normal 'global (kbd "za")  'origami-toggle-node)
-  ;; (evil-define-key 'normal 'global (kbd "<TAB>")  'origami-toggle-node)
-  (evil-define-key 'normal 'global (kbd "zc")  'origami-close-node)
-  (evil-define-key 'normal 'global (kbd "zo")  'origami-open-node)
+  ;; (evil-define-key 'normal 'global (kbd "zM")  'origami-close-all-nodes)
+  ;; (evil-define-key 'normal 'global (kbd "zR")  'origami-open-all-nodes)
+  ;; (evil-define-key 'normal 'global (kbd "za")  'origami-toggle-node)
+  ;; ;; (evil-define-key 'normal 'global (kbd "<TAB>")  'origami-toggle-node)
+  ;; (evil-define-key 'normal 'global (kbd "zc")  'origami-close-node)
+  ;; (evil-define-key 'normal 'global (kbd "zo")  'origami-open-node)
 
 
   ;; Buffer setting
@@ -332,6 +332,16 @@
 
 ;; (evil-set-initial-state 'dired-mode 'emacs)
 ;; (evil-set-initial-state 'magit-status-mode 'evil)
+
+
+(use-package vimish-fold
+  :ensure
+  :after evil)
+
+(use-package evil-vimish-fold
+  :ensure
+  :after vimish-fold
+  :hook ((prog-mode conf-mode text-mode) . evil-vimish-fold-mode))
 
 (provide 'mg-evil)
 

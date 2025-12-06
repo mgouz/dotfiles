@@ -20,16 +20,16 @@
 			 (no-other-window . t) ;; will not be selected by C-x o
 			 ))))
 
-;; (add-to-list 'display-buffer-alist
-;;    '("\\*Help\\*"
-;;      (display-buffer-in-side-window)
-;;      (side . left)
-;;      (slot . 0)
-;;      (window-width . .3)
-;;      (window-parameters .
-;; 			((no-delete-other-windows . t) ;; will not be deleted when calling C-x 0
-;; 			 (no-other-window . t) ;; will not be selected by C-x o
-;; 			 ))))
+(add-to-list 'display-buffer-alist
+   '("\\*Help\\*"
+     (display-buffer-in-side-window)
+     (side . left)
+     (slot . 0)
+     (window-width . .3)
+     (window-parameters .
+			((no-delete-other-windows . t) ;; will not be deleted when calling C-x 0
+			 (no-other-window . t) ;; will not be selected by C-x o
+			 ))))
 
 (add-to-list 'display-buffer-alist
  '("\\*Help\\*"
@@ -41,20 +41,25 @@
 ;;    (display-buffer-us)
 ;;    (inhibit-same-window . t)))
 
-; move compilation buffer to bottom
-;; (add-to-list 'display-buffer-alist
-;;    '("\\*Compilation\\*"
-;;      (display-buffer-in-side-window)
-;;      (side . bottom)
-;;      (slot . 1)
-;;      (window-width . .2)))
-
-;; Move eshell and shell buffers to bottom
+;; move compilation buffer to bottom
 (add-to-list 'display-buffer-alist
-  '("\\*\\(e?shell\\|vterm\\)\\*" display-buffer-in-direction
-    (direction . bottom)
-    (window . root)
-    (window-height . 0.3)))
+	     '((or 
+		(buffer-name . "\\*\\(e?shell\\|vterm\\)\\*")
+		(major-mode . help-mode)
+		(major-mode . vterm-mode)
+	 (major-mode . compilation-mode)
+	 (major-mode . eshell-mode))
+     (displayp-buffer-in-side-window)
+     (display-buffer-reuse-window)
+     (side . bottom)
+     (window-width . .2)))
+
+;; ;; Move eshell and shell buffers to bottom
+;; (add-to-list 'display-buffer-alist
+;;   '("\\*\\(e?shell\\|vterm\\)\\*" display-buffer-in-direction
+;;     (direction . bottom)
+;;     (window . root)
+;;     (window-height . 0.3)))
 
 
 ;; Hide compilation buffer 
@@ -85,19 +90,16 @@
              display-buffer-in-direction)
             (mode magit-mode)
             (window . root)
-            (window-width . 0.25)
+            (window-width . 0.30)
             (direction . right)))
 
-;; left, top, right, bottom
-(setq window-sides-slots '(0 0 1 0))
-
-(add-to-list 'display-buffer-alist
-          `(,(rx (| "*compilation*" "*grep*"))
-            display-buffer-in-side-window
-            (side . right)
-            (slot . 0)
-            (window-parameters . ((no-delete-other-windows . t)))
-            (window-width . 80)))
+;; (add-to-list 'display-buffer-alist
+;;           `(,(rx (| "*compilation*" "*grep*"))
+;;             display-buffer-in-side-window
+;;             (side . right)
+;;             (slot . 0)
+;;             (window-parameters . ((no-delete-other-windows . t)))
+;;             (window-width . 80)))
 
 ;; Example of moving test buffers to the right side
 ;; (add-to-list 'display-buffer-alist
@@ -142,13 +144,13 @@
                                                 #'string-lessp
                                                 tabs)))
 
-(defun mp-reload-tab-bars (&optional dummy)
-  "Reload the tab bars... because they're buggy."
-  (interactive)
-  (tab-bar-tabs-set (frame-parameter nil 'tabs)))
+;; (defun mp-reload-tab-bars (&optional dummy)
+;;   "Reload the tab bars... because they're buggy."
+;;   (interactive)
+;;   (tab-bar-tabs-set (frame-parameter nil 'tabs)))
 
-(add-hook 'kill-buffer-hook #'mp-reload-tab-bars)
-(add-hook 'window-selection-change-functions #'mp-reload-tab-bars)
+;; (add-hook 'kill-buffer-hook #'mp-reload-tab-bars)
+;; (add-hook 'window-selection-change-functions #'mp-reload-tab-bars)
 ;;; -------------- Helpers ------------------
 
 (defun mp-buffer-has-project-p (buffer action)

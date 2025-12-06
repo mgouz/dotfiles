@@ -62,5 +62,20 @@
 ;;           (consult-find buffer)
 ;;           (t posframe))))
 
+;;; NOTE: Vertico-multiform with posframe is _SLOW_
+;; (setq vertico-multiform-commands
+;;       '((consult-line
+;;          posframe
+;; 	 (execute-extra-commands :not posframe)
+;;          (vertico-posframe-poshandler . posframe-poshandler-frame-center)
+;;          (vertico-posframe-border-width . 10)
+;;          ;; NOTE: This is useful when emacs is used in both in X and
+;;          ;; terminal, for posframe do not work well in terminal, so
+;;          ;; vertico-buffer-mode will be used as fallback at the
+;;          ;; moment.
+;;          (vertico-posframe-fallback-mode . vertico-buffer-mode))
+;;         (t posframe)))
+;; (vertico-multiform-mode 1)
+
 (provide 'mg-ui)
 ;;; mg-ui.el ends here

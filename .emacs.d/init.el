@@ -99,7 +99,7 @@
   (keymap-global-set (kbd "s-]") 'next-buffer 1)
   (global-set-key (kbd "s-/") 'evilnc-comment-or-uncomment-lines)
 
-  (global-origami-mode)
+  ;; (global-origami-mode)
   (hl-line-mode 1)
   ;; Stop killing wrods when I want to DELETE them
 
@@ -292,6 +292,7 @@
   ;; 	 ("\\.hpp\\'" . c++-ts-mode)
   ;; 	 ("\\.hh\\'" . c++-ts-mode)
   ;; 	 ("\\.c\\'" . c-ts-mode)
+	 ("\\.java\\'" . java-ts-mode)
 	 ("\\.h\\'" . c++-ts-mode)
 	 )
 	 
@@ -307,6 +308,7 @@
                (go . ("https://github.com/tree-sitter/tree-sitter-go" "v0.20.0"))
                (html . ("https://github.com/tree-sitter/tree-sitter-html" "v0.20.1"))
                (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "v0.20.1" "src"))
+	       (java . ("https://github.com/tree-sitter/tree-sitter-java"))
                (json . ("https://github.com/tree-sitter/tree-sitter-json" "v0.20.2"))
                (markdown . ("https://github.com/ikatyang/tree-sitter-markdown" "v0.7.1"))
                (python . ("https://github.com/tree-sitter/tree-sitter-python" "v0.20.4"))
@@ -382,8 +384,7 @@
 (use-package vterm
   :ensure t
   :hook (vterm-mode . (lambda ()
-			(setq-local global-hl-line-mode nil)))
-  (add-hook 'vterm-mode-hook evil-emacs-state))
+			(setq-local global-hl-line-mode nil))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -404,13 +405,13 @@
 	   dockerfile-mode doom-modeline doom-themes
 	   dtrace-script-mode ein embark-consult emmet-mode
 	   evil-collection evil-nerd-commenter evil-snipe
-	   evil-surround flycheck-dtrace forge glsl-mode go-mode gptel
-	   leetcode lsp-tailwindcss lsp-ui lua-mode magit-todos
-	   marginalia mcp meson-mode multiple-cursors ninja-mode
-	   nix-mode orderless org-roam origami perspective quickrun
-	   restclient rust-mode smartparens treemacs-evil
-	   treemacs-projectile vertico vertico-posframe vterm
-	   yasnippet-snippets))
+	   evil-surround evil-vimish-fold flycheck-dtrace forge
+	   glsl-mode go-mode gptel leetcode lsp-java lsp-tailwindcss
+	   lsp-ui lua-mode magit-todos marginalia mcp meson-mode
+	   multiple-cursors ninja-mode nix-mode orderless org-roam
+	   origami perspective quickrun restclient rust-mode
+	   smartparens treemacs-evil treemacs-projectile vertico
+	   vertico-posframe vterm yasnippet-snippets))
  '(package-vc-selected-packages
    '((claude-code-ide :url
 		      "https://github.com/manzaltu/claude-code-ide.el")))
