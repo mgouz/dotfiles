@@ -31,6 +31,7 @@
 							 (evil-goto-definition)))
   (evil-define-key 'normal 'global (kbd "s-z")  'evil-undo)
   (evil-define-key 'normal 'global (kbd "s-Z")  'evil-redo)
+  (evil-define-key 'insert  'global (kbd "C-d")  'delete-char) ;; was evil-search-forward
   ;; evil-multiedit
 (evil-define-key 'normal 'global
   (kbd "s-d")   #'evil-multiedit-match-symbol-and-next
@@ -166,11 +167,13 @@
 
   ;; Org Bindings
   (evil-define-key 'normal 'global (kbd "<leader>X")   'org-capture)
-  (evil-define-key 'normal 'global (kbd "<leader>nn")  'org-capture)
-  (evil-define-key 'normal 'global (kbd "<leader>na")  'org-agenda)
-  (evil-define-key 'normal 'global (kbd "<leader>nc")  'org-goto-calenldar)
-  (evil-define-key 'normal 'global (kbd "<leader>nm")  'org-tags-view)
+  (evil-define-key 'normal 'global (kbd "<leader>on")  'org-capture)
+  (evil-define-key 'normal 'global (kbd "<leader>oa")  'org-agenda)
+  (evil-define-key 'normal 'global (kbd "<leader>oc")  'org-goto-calenldar)
+  (evil-define-key 'normal 'global (kbd "<leader>om")  'org-tags-view)
   ;; (evil-define-key 'normal 'global (kbd "<leader>n*")  'search-org-project-for-symbol) ;; TODO
+
+  ;; Help bindings
   (evil-define-key 'normal 'global (kbd "<leader>ho")  'describe-symbol)
   (evil-define-key 'normal 'global (kbd "<leader>hf")  'describe-function)
   (evil-define-key 'normal 'global (kbd "<leader>hF")  'Info-goto-emacs-command-node)

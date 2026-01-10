@@ -5,6 +5,7 @@
          (lsp-mode . lsp-enable-which-key-integration)
          (tsx-ts-mode . lsp-deferred)
 	 (rust-mode . lsp-deferred)
+	 (rust-ts-mode . lsp-deferred)
 	 (c-mode . lsp-deferred)
 	 (c-ts-mode . lsp-deferred)
 	 (c++-mode . lsp-deferred)

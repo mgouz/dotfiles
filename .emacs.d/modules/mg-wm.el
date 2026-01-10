@@ -42,37 +42,26 @@
 ;;    (inhibit-same-window . t)))
 
 ;; move compilation buffer to bottom
+;; (add-to-list 'display-buffer-alist
+;; 	     '((or 
+;; 		(buffer-name . "\\*\\(e?shell\\|vterm\\)\\*")
+;; 		(major-mode . help-mode)
+;; 		(major-mode . vterm-mode)
+;; 	 (major-mode . compilation-mode)
+;; 	 (major-mode . eshell-mode))
+;;      (displayp-buffer-in-side-window)
+     ;; (display-buffer-reuse-window)
+     ;; (side . bottom)
+     ;; (window-width . .2)))
+
+;; Make compilation and vterm buffers reuse the same window at bottom
 (add-to-list 'display-buffer-alist
-	     '((or 
-		(buffer-name . "\\*\\(e?shell\\|vterm\\)\\*")
-		(major-mode . help-mode)
-		(major-mode . vterm-mode)
-	 (major-mode . compilation-mode)
-	 (major-mode . eshell-mode))
-     (displayp-buffer-in-side-window)
-     (display-buffer-reuse-window)
-     (side . bottom)
-     (window-width . .2)))
-
-;; ;; Move eshell and shell buffers to bottom
-;; (add-to-list 'display-buffer-alist
-;;   '("\\*\\(e?shell\\|vterm\\)\\*" display-buffer-in-direction
-;;     (direction . bottom)
-;;     (window . root)
-;;     (window-height . 0.3)))
-
-
-;; Hide compilation buffer 
-;; (add-to-list 'display-buffer-alist
-;;      '("\\*compilation\\*" display-buffer-no-window
-;;         (allow-no-window . t)))
-
-;; ;; Tell vterm to reuse its window instead of opening a new one each time
-;; (add-to-list 'display-buffer-alist
-;;      '("\\*vterm\\*" display-buffer-reuse-mode-window
-;;        ;; change to `t' to not reuse same window
-;;        (inhibit-same-window . nil)
-;;        (mode vterm-mode vterm-copy-mode)))
+  '("\\*\\(compilation\\|vterm\\)\\*"
+    (display-buffer-reuse-window display-buffer-in-direction)
+    (direction . bottom)
+    (window . root)
+    (window-height . 0.3)
+    (reusable-frames . visible)))
 
 ;; Reuse xref, grep, and occur buffers instead of opening new ones
 (add-to-list 'display-buffer-alist
@@ -109,16 +98,16 @@
 
 ;;; -------------- TABS ------------------
 
-(add-to-list 'display-buffer-alist
-          `((or (derived-mode . org-mode)
-                (derived-mode . org-agenda-mode))
-            (display-buffer-in-tab display-buffer-in-direction)
-            (ignore-current-tab . t)
-            (direction . bottom)
-            (window-height . .2)
-            (tab-name . "📝 My ORG Mode Files")
-            ;; Optional
-            (tab-group . "Org")))
+;; (add-to-list 'display-buffer-alist
+;;           `((or (derived-mode . org-mode)
+;;                 (derived-mode . org-agenda-mode))
+;;             (display-buffer-in-tab display-buffer-in-direction)
+;;             (ignore-current-tab . t)
+;;             (direction . bottom)
+;;             (window-height . .2)
+;;             (tab-name . "📝 My ORG Mode Files")
+;;             ;; Optional
+;;             (tab-group . "Org")))
 
 
 (defun mp-buffer-has-project-p (buffer action)
@@ -131,18 +120,18 @@
   (with-current-buffer buffer
     (buffer-name)))
 
-(add-to-list 'display-buffer-alist
-             '(mp-buffer-has-project-p
-               (display-buffer-in-tab display-buffer-reuse-window)
-               (tab-name . mp-tab-tab-name)
-               (tab-group . mp-tab-group-name)))
+;; (add-to-list 'display-buffer-alist
+;;              '(mp-buffer-has-project-p
+;;                (display-buffer-in-tab display-buffer-reuse-window)
+;;                (tab-name . mp-tab-tab-name)
+;;                (tab-group . mp-tab-group-name)))
 
-;;; OPTIONAL, but probably required for everything to work 100%
-(defun tab-bar-tabs-set (tabs &optional frame)
-  "Set a list of TABS on the FRAME."
-  (set-frame-parameter frame 'tabs (seq-sort-by (lambda (el) (alist-get 'group el nil))
-                                                #'string-lessp
-                                                tabs)))
+;; ;;; OPTIONAL, but probably required for everything to work 100%
+;; (defun tab-bar-tabs-set (tabs &optional frame)
+;;   "Set a list of TABS on the FRAME."
+;;   (set-frame-parameter frame 'tabs (seq-sort-by (lambda (el) (alist-get 'group el nil))
+;;                                                 #'string-lessp
+;;                                                 tabs)))
 
 ;; (defun mp-reload-tab-bars (&optional dummy)
 ;;   "Reload the tab bars... because they're buggy."

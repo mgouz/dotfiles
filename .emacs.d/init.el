@@ -79,6 +79,7 @@
   :ensure t
   :after yasnippet
   )
+(electric-pair-mode 1)
 
 (use-package emacs
   :custom
@@ -97,7 +98,10 @@
   (keymap-global-set (kbd "s-w") 'tab-close 1)
   (keymap-global-set (kbd "s-[") 'previous-buffer 1)
   (keymap-global-set (kbd "s-]") 'next-buffer 1)
+  (global-set-key (kbd "s-.") 'embark-act)
+  (global-set-key (kbd "s-;") 'edit-init-file)
   (global-set-key (kbd "s-/") 'evilnc-comment-or-uncomment-lines)
+  (global-set-key (kbd "s-p") 'projectile-find-file)
 
   ;; (global-origami-mode)
   (hl-line-mode 1)
@@ -276,8 +280,12 @@
 (use-package treesit
   :mode (
 	 ("\\.tsx\\'" . tsx-ts-mode)
-  ;; 	 ("\\.ts\\'" . typescript-ts-mode-hook)
-  ;; 	 ("\\.js\\'" . js-ts-mode)
+	 ("\\.ts\\'" . typescript-ts-mode)
+	 ("\\.mts\\'" . typescript-ts-mode)
+	 ("\\.js\\'" . js-ts-mode)
+	 ("\\.mjs\\'" . js-ts-mode)
+	 ("\\.cjs\\'" . js-ts-mode)
+
   ;; 	 ("\\.html\\'" . html-ts-mode)
   ;; 	 ("\\.css\\'" . css-ts-mode)
   ;; 	 ("\\.json\\'" . json-ts-mode)
@@ -291,7 +299,9 @@
 	 ("\\.cc\\'" . c++-ts-mode)
   ;; 	 ("\\.hpp\\'" . c++-ts-mode)
   ;; 	 ("\\.hh\\'" . c++-ts-mode)
+
   ;; 	 ("\\.c\\'" . c-ts-mode)
+	 ("\\.rs\\'" . rust-ts-mode)
 	 ("\\.java\\'" . java-ts-mode)
 	 ("\\.h\\'" . c++-ts-mode)
 	 )
@@ -392,26 +402,31 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("4594d6b9753691142f02e67b8eb0fda7d12f6cc9f1299a49b819312d6addad1d"
+   '("7e98dc1aa7f5db0557691da690c38d55e83ddd33c6d268205d66e430d57fb982"
+     "4594d6b9753691142f02e67b8eb0fda7d12f6cc9f1299a49b819312d6addad1d"
      "e8bd9bbf6506afca133125b0be48b1f033b1c8647c628652ab7a2fe065c10ef0"
      default))
  '(elfeed-feeds '("https://osblog.stephenmarz.com/feed.rss"))
  '(org-babel-load-languages
    '((emacs-lisp . t) (awk . t) (python . t) (js . t) (java . t) (C . t)
-     (sqlite . t) (css . t) (lua . t)))
+     (sqlite . t) (css . t) (mermaid . t) (go . t) (lua . t)))
  '(package-selected-packages
-   '(aider aidermacs all-the-icons cape catppuccin-theme claude-code-ide
-	   copilot corfu dap-mode dape diff-hl disaster docker
+   '(aider aidermacs cape catppuccin-theme claude-code-ide
+	   cmake-mode copilot corfu dape diff-hl disaster docker
 	   dockerfile-mode doom-modeline doom-themes
 	   dtrace-script-mode ein embark-consult emmet-mode
-	   evil-collection evil-nerd-commenter evil-snipe
-	   evil-surround evil-vimish-fold flycheck-dtrace forge
-	   glsl-mode go-mode gptel leetcode lsp-java lsp-tailwindcss
-	   lsp-ui lua-mode magit-todos marginalia mcp meson-mode
-	   multiple-cursors ninja-mode nix-mode orderless org-roam
-	   origami perspective quickrun restclient rust-mode
-	   smartparens treemacs-evil treemacs-projectile vertico
-	   vertico-posframe vterm yasnippet-snippets))
+	   evil-collection evil-mc evil-multiedit evil-nerd-commenter
+	   evil-snipe evil-surround evil-vimish-fold
+	   exec-path-from-shell flycheck-dtrace forge glsl-mode
+	   go-mode gptel just-ts-mode leetcode lsp-java
+	   lsp-tailwindcss lsp-ui lua-mode magit-todos marginalia mcp
+	   meson-mode modus-themes multiple-cursors ninja-mode
+	   nix-mode orderless org-download org-krita org-modern
+	   org-roam org-super-agenda org-timeblock origami pdf-tools
+	   perspective platformio-mode quickrun restclient rustic
+	   smartparens spacemacs-theme treemacs-evil
+	   treemacs-projectile tsc vertico-posframe vterm
+	   writeroom-mode yasnippet-snippets zig-mode))
  '(package-vc-selected-packages
    '((claude-code-ide :url
 		      "https://github.com/manzaltu/claude-code-ide.el")))
@@ -562,14 +577,6 @@
              clojure-mode))
     (add-to-list 'lsp-tailwindcss-major-modes tw-major-mode)))
 
-(use-package typescript-mode
-  :mode "\\.ts"
-  :hook (typescipt-mode . lsp-deferred)
-  :config
-  (setq typescript-indent-level 2)
-  (require 'dap-node)
-  (dap-node-setup))
-
 ;; (dap-register-debug-template
 ;;   "Debug Electron"
 ;;   (list :type "node"
@@ -577,7 +584,6 @@
 ;;         :program "${workspaceFolder}/main.ts"
 ;;         :outFiles ["${workspaceFolder}/dist/**/*.js"]
 ;;         :name "Debug Server"))
-(add-hook 'tsx-ts-mode-hook #'lsp-deferred)
 
 (require 'multiple-cursors)
 
@@ -632,10 +638,6 @@
   :ensure t
   :mode ("\\.d\\'" . dtrace-script-mode))
 
-(use-package rust-mode
-  :init
-  (setq rust-mode-treesitter-derive nil))
-
 
 (use-package exec-path-from-shell
   :ensure t
@@ -669,3 +671,10 @@
 ;; stop the warning buffer from stealing focus
 (setq warnings-buffer-display-style nil)
 
+;; (setq url-queue-timeout 30) ;; increase url timeout to 30 seconds
+;; (setq url-ret )
+(advice-add 'url-retrieve :around
+			(lambda (orig-fun &rest args)
+			  "Increase timeout for url-retrieve."
+			  (let ((url-queue-timeout 30)) ;; set timeout to 30 seconds
+				(apply orig-fun args))))
