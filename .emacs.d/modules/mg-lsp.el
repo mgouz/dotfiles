@@ -228,7 +228,7 @@
   :after lsp-mode
   :config
   (setq lsp-java-format-enabled t) ; Disable formatting, I use prettier)
-(add-hook 'java-mode-hook #'lsp)
+(add-hook 'java-mode-hook #'lsp))
 
 
 (provide 'mg-lsp)

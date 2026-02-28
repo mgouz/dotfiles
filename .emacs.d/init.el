@@ -8,6 +8,7 @@
 
 ;;; THIS NEEDS TO BE AT THE TOP
 (require 'package)
+
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 
@@ -58,19 +59,6 @@
 
 (setq lsp-use-plists t)
 
-(add-to-list 'load-path (concat user-emacs-directory "/modules"))
-(require 'mg-ui)
-(require 'mg-evil)
-(require 'mg-wip)
-(require 'mg-git)
-(require 'mg-completion-minibuffer)
-(require 'mg-completion-point)
-(require 'mg-org)
-;; (require 'mg-debugging)
-(require 'mg-lsp)
-(require 'mg-ai)
-(require 'mg-wm)
-
 (use-package yasnippet
   :ensure t)
 
@@ -79,6 +67,7 @@
   :ensure t
   :after yasnippet
   )
+
 (electric-pair-mode 1)
 
 (use-package emacs
@@ -101,6 +90,7 @@
   (global-set-key (kbd "s-.") 'embark-act)
   (global-set-key (kbd "s-;") 'edit-init-file)
   (global-set-key (kbd "s-/") 'evilnc-comment-or-uncomment-lines)
+  (global-set-key (kbd "s-p") 'projectile-find-file)
   (global-set-key (kbd "s-p") 'projectile-find-file)
 
   ;; (global-origami-mode)
@@ -182,24 +172,8 @@
   (setq ispell-program-name "aspell")
 
   ;; Make Flymake run in all programming buffers
-  (add-hook 'org-mode-hook 'flyspell-mode)
   (add-hook 'mhtml-mode-hook 'emmet-mode)
   (add-hook 'prog-mode-hook 'flymake-mode)
-
-;; (use-package flycheck
-;;   :ensure t
-;;   :bind (:map flycheck-mode-map
-;; 			  ("M-n" . flycheck-next-error) ; optional but recommended error navigation
-;; 			  ("M-p" . flycheck-previous-error))
-;;   :init (global-flycheck-mode))
-
-
-;; (with-eval-after-load 'flycheck
-;;   (use-package consult-flycheck
-;; 	:ensure t
-;;   :bind (:map flycheck-mode-map
-;; 			  ("gh" . consult-flycheck))))
-
 
   (use-package flymake
     :config
@@ -242,10 +216,9 @@
   
   (which-key-mode)
   (editorconfig-mode 1)
+  )
 
 
-  ;; Org-mode Setup
-  (setq org-startup-indented t))
 ;; END EMACS Config
 
 ;; (add-hook 'prog-mode-hook (lambda () (eglot)))  
@@ -270,13 +243,6 @@
   (persp-mode))
 
 
-
-;; (use-package tree-sitter
-;;   :config
-;;   (require 'tree-sitter-langs)
-  ;; (global-tree-sitter-mode)
-  ;; (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
-
 (use-package treesit
   :mode (
 	 ("\\.tsx\\'" . tsx-ts-mode)
@@ -286,21 +252,25 @@
 	 ("\\.mjs\\'" . js-ts-mode)
 	 ("\\.cjs\\'" . js-ts-mode)
 
-  ;; 	 ("\\.html\\'" . html-ts-mode)
-  ;; 	 ("\\.css\\'" . css-ts-mode)
-  ;; 	 ("\\.json\\'" . json-ts-mode)
-  ;; 	 ("\\.py\\'" . python-ts-mode)
-  ;; 	 ("\\.go\\'" . go-ts-mode)
+	 ("\\.lhs\\'" . haskell-ts-mode)
+	 ("\\.ml\\'" . ocaml-ts-mode)
+	 ("\\.mli\\'" . ocaml-ts-mode)
+
+	 ("\\.html\\'" . html-ts-mode)
+	 ("\\.css\\'" . css-ts-mode)
+	 ("\\.json\\'" . json-ts-mode)
+	 ("\\.py\\'" . python-ts-mode)
+	 ("\\.go\\'" . go-ts-mode)
   ;; 	 ("\\.rs\\'" . rust-ts-mode)
-  ;; 	 ("\\.toml\\'" . toml-ts-mode)
-  ;; 	 ("\\.yaml\\'" . yaml-ts-mode)
-  ;; 	 ("\\.md\\'" . markdown-ts-mode)
+	 ("\\.toml\\'" . toml-ts-mode)
+	 ("\\.yaml\\'" . yaml-ts-mode)
+	 ("\\.md\\'" . markdown-ts-mode)
 	 ("\\.cpp\\'" . c++-ts-mode)
 	 ("\\.cc\\'" . c++-ts-mode)
-  ;; 	 ("\\.hpp\\'" . c++-ts-mode)
-  ;; 	 ("\\.hh\\'" . c++-ts-mode)
+	 ("\\.hpp\\'" . c++-ts-mode)
+	 ("\\.hh\\'" . c++-ts-mode)
 
-  ;; 	 ("\\.c\\'" . c-ts-mode)
+	 ("\\.c\\'" . c-ts-mode)
 	 ("\\.rs\\'" . rust-ts-mode)
 	 ("\\.java\\'" . java-ts-mode)
 	 ("\\.h\\'" . c++-ts-mode)
@@ -317,6 +287,10 @@
              '((css . ("https://github.com/tree-sitter/tree-sitter-css" "v0.20.0"))
                (go . ("https://github.com/tree-sitter/tree-sitter-go" "v0.20.0"))
                (html . ("https://github.com/tree-sitter/tree-sitter-html" "v0.20.1"))
+               (html . ("https://github.com/tree-sitter/tree-sitter-html" "v0.20.1"))
+	       ;; (haskell . ("https://github.com/tree-sitter/tree-sitter-haskell"))
+	       ;; (ocaml . ("https://github.com/tree-sitter/tree-sitter-ocaml"))
+
                (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "v0.20.1" "src"))
 	       (java . ("https://github.com/tree-sitter/tree-sitter-java"))
                (json . ("https://github.com/tree-sitter/tree-sitter-json" "v0.20.2"))
@@ -407,9 +381,10 @@
      "e8bd9bbf6506afca133125b0be48b1f033b1c8647c628652ab7a2fe065c10ef0"
      default))
  '(elfeed-feeds '("https://osblog.stephenmarz.com/feed.rss"))
- '(org-babel-load-languages
-   '((emacs-lisp . t) (awk . t) (python . t) (js . t) (java . t) (C . t)
-     (sqlite . t) (css . t) (mermaid . t) (go . t) (lua . t)))
+
+ 
+
+
  '(package-selected-packages
    '(aider aidermacs cape catppuccin-theme claude-code-ide
 	   cmake-mode copilot corfu dape diff-hl disaster docker
@@ -434,6 +409,7 @@
    '((projectile-project-compilation-cmd
       . "cmake --build build && ./build/chapterX")
      (projectile-run-project . "./build/chapterX"))))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -611,7 +587,8 @@
   )
 
 (use-package docker
-  :ensure t)
+  :ensure t
+  :bind (("C-c d" .  'docker)))
 
 (use-package dockerfile-mode
   :ensure t
@@ -678,3 +655,20 @@
 			  "Increase timeout for url-retrieve."
 			  (let ((url-queue-timeout 30)) ;; set timeout to 30 seconds
 				(apply orig-fun args))))
+
+;; OCaml setup
+(add-to-list 'load-path "/Users/mattgouzoulis/.opam/5.3.0/share/emacs/site-lisp")
+(require 'ocp-indent)
+
+(add-to-list 'load-path (concat user-emacs-directory "/modules"))
+(require 'mg-ui)
+(require 'mg-evil)
+(require 'mg-wip)
+(require 'mg-git)
+(require 'mg-completion-minibuffer)
+(require 'mg-completion-point)
+(require 'mg-org)
+;; (require 'mg-debugging)
+(require 'mg-lsp)
+(require 'mg-ai)
+(require 'mg-wm)

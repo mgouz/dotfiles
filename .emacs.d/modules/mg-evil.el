@@ -14,7 +14,7 @@
 (use-package evil
   :ensure t ;; install the evil package if not installed
   :config 
-  (global-evil-mc-mode 1)
+  ;; (global-evil-mc-mode 1)
   ;; Don't set emacs mode because it can affect
   (evil-set-leader '(normal motion) (kbd "SPC")) ;; Has issues in Info mode, finder, ibuffer, and dired
   (evil-define-key 'normal  'global  (kbd "<leader>.")  'find-file)
@@ -93,11 +93,11 @@
   (evil-define-key 'normal 'global (kbd "<leader>pi")  'projectile-ibuffer)
   (evil-define-key 'normal 'global (kbd "<leader>pb")  'consult-project-buffer)
   (evil-define-key 'normal 'global (kbd "<leader>pB")  'projectile-switch-to-buffer-other-window)
-  (evil-define-key 'normal 'global (kbd "<leader>pf")  'projectile-find-file)
-  (evil-define-key 'normal 'global (kbd "<leader>pF")  'projectile-find-file-other-window)
-  (evil-define-key 'normal 'global (kbd "s-p")  'projectile-find-file)
-  (evil-define-key 'normal 'global (kbd "<leader>pp")  'projectile-switch-project)
-  (evil-define-key 'normal 'global (kbd "<leader>pk")  'projectile-kill-buffers)
+  (evil-define-key 'normal 'global (kbd "<leader>pf")  'project-find-file)
+  ;; (evil-define-key 'normal 'global (kbd "<leader>pF")  'projectile-find-file-other-window)
+  (evil-define-key 'normal 'global (kbd "s-p")  'project-find-file)
+  (evil-define-key 'normal 'global (kbd "<leader>pp")  'project-switch-project)
+  (evil-define-key 'normal 'global (kbd "<leader>pk")  'project-kill-buffers)
   (evil-define-key 'normal 'global (kbd "<leader>pt")  'projectile-test-project)
   (evil-define-key 'normal 'global (kbd "<leader>pI")  'projectile-ibuffer)
   (evil-define-key 'normal 'global (kbd "<leader>pc")  'projectile-compile-project)
@@ -256,6 +256,7 @@
   :init ;; tweak evil's configuration before loading it
   (setq evil-want-keybinding nil)
   (evil-mode 1))
+  
 
 ;; (add-hook 'Info-mode-hook (evil-normalize-keymaps))
 ;; (add-hook 'dired-mode-hook 'evil-normalize-keymaps) ;; evil-want-keybinding should be null
@@ -272,7 +273,10 @@
 ;;   ;;                         docker-volume-mode-map))
 ;;   ;; (add-to-list 'evil-collection-mode-list (append evil-collection-mode-list docker-map-list))
 ;;   (evil-collection-init))
-(evil-collection-init)
+(add-hook 'after-init-hook #'evil-collection-init)
+
+(with-eval-after-load 'dired
+  (evil-define-key 'normal dired-mode-map (kbd "SPC") nil))
 
 ;; (with-eval-after-load 'docker (evil-collection-docker-setup))
 ;; (with-eval-after-load 'info (evil-collection-info-setup))

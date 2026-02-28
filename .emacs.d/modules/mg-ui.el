@@ -34,11 +34,11 @@
   ;; DEFAULT FTW 
   ;; (load-theme 'doom-1337 t)
   ;; (load-theme 'doom-henna t)
-  (load-theme 'catppuccin t)
+  ;; (load-theme 'default t) 
 
   ;; Enable flashing mode-line on errors
   ;;(doom-themes-visual-bell-config)
-  ;; Enable custom neotree theme (all-the-icons must be installed!)
+  ;; Enable custom neotree teme (all-the-icons must be installed!)
   (doom-themes-neotree-config)
   ;; or for treemacs users
   (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
@@ -50,8 +50,8 @@
 ;; (with-eval-after-load 'catppuccin-get-color
 ;;   (load-theme 'catppuccin t))
 
-(with-eval-after-load 'spacemacs-theme
- (load-theme 'spacemacs-light t))
+;; (with-eval-after-load 'spacemacs-theme
+;;  (load-theme 'spacemacs-light t))
  
 ;; (use-package vertico
 ;;   :config
