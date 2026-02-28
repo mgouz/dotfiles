@@ -7,6 +7,7 @@ if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
         print -P "%F{160} The clone has failed.%f%b"
 fi
 
+
 source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
@@ -27,7 +28,12 @@ eval "$(starship init zsh)"
 
 plugins=(git direnv docker)
 
-export EDITOR='nvim'
+emacs_alias='emacsclient -t -a ""'
+
+alias ec=$emacs_alias
+alias ecf='emacsclient -c -a ""'
+alias emacs='emacsclient -c -a "" &'
+export EDITOR=$emacs_alias
 zstyle :compinstall filename '/Users/mattgouzoulis/.zshrc'
 
 autoload -Uz compinit
@@ -91,7 +97,14 @@ alias stat="stat -x"
 
 ## General stuff
 alias zc="vim ~/.zshrc"
-alias ec="emacsclient -nw"
+# ec () {
+#     if ! pgrep -qf "Emacs.*--.*-daemon" 2>&1 > /dev/null ; then
+#         emacs --bg-daemon
+#     fi
+#     emacsclient "$@"
+# }
+
+# alias ec="emacsclient -nw || emacs --bg-daemon && emacsclient"
 alias sz="source ~/.zshrc"
 alias v="nvim"
 alias vim="nvim"
