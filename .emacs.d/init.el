@@ -661,6 +661,7 @@
 (require 'ocp-indent)
 
 (add-to-list 'load-path (concat user-emacs-directory "/modules"))
+(require 'mg-splash)
 (require 'mg-ui)
 (require 'mg-evil)
 (require 'mg-wip)
