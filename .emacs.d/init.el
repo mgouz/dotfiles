@@ -17,15 +17,18 @@
 (setq vc-follow-symlinks t) ; Follow symlinks automatically
 
 (let ((backup-dir "~/tmp/emacs/backups")
-      (auto-saves-dir "~/tmp/emacs/auto-saves/"))
-  (dolist (dir (list backup-dir auto-saves-dir))
+      (auto-saves-dir "~/tmp/emacs/auto-saves/")
+      (desktop-saves-dir "~/tmp/emacs/desktops/"))
+  (dolist (dir (list backup-dir auto-saves-dir desktop-saves-dir))
     (when (not (file-directory-p dir))
       (make-directory dir t)))
   (setq backup-directory-alist `(("." . ,backup-dir))
         auto-save-file-name-transforms `((".*" ,auto-saves-dir t))
         auto-save-list-file-prefix (concat auto-saves-dir ".saves-")
         tramp-backup-directory-alist `((".*" . ,backup-dir))
-        tramp-auto-save-directory auto-saves-dir))
+        tramp-auto-save-directory auto-saves-dir
+        desktop-path desktop-saves-dir
+        desktop-dirname desktop-saves-dir))
 
 (setq backup-by-copying t    ; Don't delink hardlinks
       delete-old-versions t  ; Clean up the backups
@@ -174,6 +177,17 @@
   ;; Make Flymake run in all programming buffers
   (add-hook 'mhtml-mode-hook 'emmet-mode)
   (add-hook 'prog-mode-hook 'flymake-mode)
+  (use-package emmet-mode
+    :ensure t
+    :hook (html-mode css-mode web-mode mhtml-mode)
+    :bind
+    (:map emmet-mode-keymap
+          ("C-j" . emmet-expand-line)
+          ("C-J" . emmet-expand-line)
+          )
+    :config
+    (setq emmet-move-cursor-between-quotes t)
+    (setq emmet-indentation 2))
 
   (use-package flymake
     :config
@@ -183,7 +197,6 @@
                 ("M-n" . flymake-goto-next-error) ; optional but recommended error navigation
                 ("M-p" . flymake-goto-prev-error)))
   
-
   ;; Disbale auto save to stop spamming my machine with auto-save files everywhere
   (setq auto-save-default nil)
   
@@ -376,35 +389,19 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("7e98dc1aa7f5db0557691da690c38d55e83ddd33c6d268205d66e430d57fb982"
-     "4594d6b9753691142f02e67b8eb0fda7d12f6cc9f1299a49b819312d6addad1d"
+   '("4594d6b9753691142f02e67b8eb0fda7d12f6cc9f1299a49b819312d6addad1d"
      "e8bd9bbf6506afca133125b0be48b1f033b1c8647c628652ab7a2fe065c10ef0"
      default))
  '(elfeed-feeds '("https://osblog.stephenmarz.com/feed.rss"))
-
- 
-
-
  '(package-selected-packages
-   '(aider aidermacs cape catppuccin-theme claude-code-ide
-	   cmake-mode copilot corfu dape diff-hl disaster docker
-	   dockerfile-mode doom-modeline doom-themes
-	   dtrace-script-mode ein embark-consult emmet-mode
-	   evil-collection evil-mc evil-multiedit evil-nerd-commenter
-	   evil-snipe evil-surround evil-vimish-fold
-	   exec-path-from-shell flycheck-dtrace forge glsl-mode
-	   go-mode gptel just-ts-mode leetcode lsp-java
-	   lsp-tailwindcss lsp-ui lua-mode magit-todos marginalia mcp
-	   meson-mode modus-themes multiple-cursors ninja-mode
-	   nix-mode orderless org-download org-krita org-modern
-	   org-roam org-super-agenda org-timeblock origami pdf-tools
-	   perspective platformio-mode quickrun restclient rustic
-	   smartparens spacemacs-theme treemacs-evil
-	   treemacs-projectile tsc vertico-posframe vterm
-	   writeroom-mode yasnippet-snippets zig-mode))
+   '(all-the-icons cape corfu diff-hl doom-modeline doom-themes
+                   embark-consult evil-collection evil-nerd-commenter
+                   evil-snipe evil-surround general lsp-jedi magit
+                   marginalia orderless org-roam pdf-tools pyvenv
+                   quickrun treemacs-evil vertico yasnippet-snippets))
  '(package-vc-selected-packages
    '((claude-code-ide :url
-		      "https://github.com/manzaltu/claude-code-ide.el")))
+                      "https://github.com/manzaltu/claude-code-ide.el")))
  '(safe-local-variable-values
    '((projectile-project-compilation-cmd
       . "cmake --build build && ./build/chapterX")
@@ -655,6 +652,13 @@
 			  "Increase timeout for url-retrieve."
 			  (let ((url-queue-timeout 30)) ;; set timeout to 30 seconds
 				(apply orig-fun args))))
+
+
+(use-package pyvenv
+  :diminish
+  :config
+  (setq pyvenv-mode-line-indicator '(pyvenv-virtual-env-name ("[venv:" pyvenv-virtual-env-name "] ")))
+  (pyvenv-mode +1))
 
 ;; OCaml setup
 (add-to-list 'load-path "/Users/mattgouzoulis/.opam/5.3.0/share/emacs/site-lisp")

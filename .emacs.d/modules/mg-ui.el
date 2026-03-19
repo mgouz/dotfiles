@@ -31,10 +31,9 @@
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
 
-  ;; DEFAULT FTW 
   ;; (load-theme 'doom-1337 t)
   ;; (load-theme 'doom-henna t)
-  ;; (load-theme 'default t) 
+  (load-theme 'doom-xcode t) 
 
   ;; Enable flashing mode-line on errors
   ;;(doom-themes-visual-bell-config)
@@ -76,6 +75,14 @@
 ;;          (vertico-posframe-fallback-mode . vertico-buffer-mode))
 ;;         (t posframe)))
 ;; (vertico-multiform-mode 1)
+
+;; Disable menu bar in terminal
+(unless ( display-graphic-p )
+(menu-bar-mode -1))
+
+;; EDiff settings
+(setq ediff-split-window-function 'split-window-vertically)
+(setq ediff-merge-split-window-function 'split-window-vertically)
 
 (provide 'mg-ui)
 ;;; mg-ui.el ends here

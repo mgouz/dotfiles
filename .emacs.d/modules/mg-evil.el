@@ -173,6 +173,16 @@
   (evil-define-key 'normal 'global (kbd "<leader>om")  'org-tags-view)
   ;; (evil-define-key 'normal 'global (kbd "<leader>n*")  'search-org-project-for-symbol) ;; TODO
 
+
+  ;; Git 
+  (evil-define-key 'normal 'global (kbd "<leader>gg")  'magit)
+  (evil-define-key 'normal 'global (kbd "<leader>gb")  'magit-blame)
+  (evil-define-key 'normal 'global (kbd "<leader>gr")  'magit-run)
+  (evil-define-key 'normal 'global (kbd "<leader>gd")  'magit-ediff)
+  (evil-define-key 'normal 'global (kbd "<leader>gi")  'magit-init)
+  (evil-define-key 'normal 'global (kbd "<leader>gw")  'magit-worktree)
+  (evil-define-key 'normal 'global (kbd "<leader>gm")  'magit-submodule)
+
   ;; Help bindings
   (evil-define-key 'normal 'global (kbd "<leader>ho")  'describe-symbol)
   (evil-define-key 'normal 'global (kbd "<leader>hf")  'describe-function)
@@ -211,6 +221,7 @@
   (evil-define-key 'normal 'global (kbd "<leader>lf")  'lsp-format-buffer)
   (evil-define-key 'normal 'global (kbd "s-O")  'lsp-ui-imenu)
   (evil-define-key 'normal 'global (kbd "s-D")  'dap-debug)
+  
   ;; (evil-define-key 'normal 'global (kbd "<leadlr>k")  'describe-key)
   ;; (evil-define-key 'normal 'global (kbd "<leader>lr")  'xref-find-references)
 
@@ -224,6 +235,7 @@
   (evil-define-key 'normal 'global (kbd "<leader>xd")  'xref-find-definitions)
   (evil-define-key 'normal 'global (kbd "<leader>xr")  'xref-find-references)
   (evil-define-key 'normal 'global (kbd "<leader>fs") 'save-buffer)
+  (evil-define-key 'normal 'global (kbd "<leader>w") 'save-buffer)
 
 
   ;; (evil-define-key 'normal 'global (kbd "<leader>cf")  ')
@@ -242,9 +254,9 @@
   (evil-define-key '(insert motion ) 'global (kbd "C-e") 'move-end-of-line)
   (evil-define-key '(insert motion ) 'global (kbd "C-f") 'forward-char)
   (evil-define-key '(insert motion ) 'global (kbd "C-b") 'backward-char)
-  (evil-define-key '(normal insert motion) 'global (kbd "C-u") 'evil-scroll-up)
-  (evil-define-key '(normal insert motion) 'global (kbd "C-k") 'previous-line)
-  (evil-define-key '(normal insert motion) 'global (kbd "C-j") 'next-line)
+  ;; (evil-define-key '(normal insert motion) 'global (kbd "C-u") 'evil-scroll-up)
+  ;; (evil-define-key '(normal insert motion) 'global (kbd "C-k") 'previous-line)
+  ;; (evil-define-key '(normal insert motion) 'global (kbd "C-j") 'next-line)
   ;; (evil-define-key '(insert) 'global (kbd "C-d") 'delete-char)
 
 
