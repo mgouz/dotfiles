@@ -1,4 +1,6 @@
+;;; mg-evil ---  Summary 
 ;;; -*- lexical-binding: t -*-
+
 
 
 ; (keymap-unset 'Info-mode (kbd "SPC"))
@@ -11,6 +13,7 @@
 ;;     (org-insert-item) 
 ;;   )
 
+;;; Code:
 (use-package evil
   :ensure t ;; install the evil package if not installed
   :config 
@@ -365,3 +368,22 @@
 (provide 'mg-evil)
 
 ;;; evil.el ends here
+
+(use-package lsp-tailwindcss
+  ;; :straight '(lsp-tailwindcss :type git :host github :repo "merrickluo/lsp-tailwindcss")
+  :init (setq lsp-tailwindcss-add-on-mode t)
+  :ensure t
+  :after lsp-mode
+  :config
+  (dolist (tw-major-mode
+           '(css-mode
+             css-ts-mode
+	     web-mode
+	     html-mode
+             typescript-mode
+             typescript-ts-mode
+             tsx-ts-mode
+             js2-mode
+             js-ts-mode
+             clojure-mode))
+    (add-to-list 'lsp-tailwindcss-major-modes tw-major-mode)))

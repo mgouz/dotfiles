@@ -19,7 +19,6 @@
 	 (js-mode . lsp-deferred)
 	 (js-ts-mode . lsp-deferred)
 	 (java-ts-mode . lsp-deferred)
-	 (typescript-mode . lsp-deferred)
 	 (typescript-ts-mode . lsp-deferred))
   :custom
   (lsp-keymap-prefix "C-c l")           ; Prefix for LSP actions
@@ -28,12 +27,12 @@
   ;; (lsp-session-file (locate-user-emacs-file ".lsp-session"))
   (lsp-log-io nil)                      ; IMPORTANT! Use only for debugging! Drastically affects performance
   (lsp-keep-workspace-alive nil)        ; Close LSP server if all project buffers are closed
-  (lsp-idle-delay 0.5)                  ; Debounce timer for `after-change-function'
+  (lsp-idle-delay 0.7)                  ; Debounce timer for `after-change-function'
   ;; ;; core
   (lsp-enable-xref t)                   ; Use xref to find references
   (lsp-auto-configure t)                ; Used to decide between current active servers
   (lsp-eldoc-enable-hover t)            ; Display signature information in the echo area
-  (lsp-eldoc-render-all nil)
+  (lsp-eldoc-render-all t)
   (lsp-enable-dap-auto-configure t)     ; Debug support
   ;; (lsp-enable-file-watchers nil)
   ;; (lsp-enable-folding nil)              ; I disable folding since I use origami
@@ -211,6 +210,31 @@
     :server-id 'glsl-analyzer
     :add-on? t
     :priority -1))
+  
+  ;; (lsp-register-client
+  ;;  (make-lsp-client
+  ;;   :new-connection (lsp-stdio-connection '("jedi-language-server" "--stdio"))
+  ;;   :activation-fn (lsp-activate-on "python")
+  ;;   :server-id 'python
+  ;;   :add-on? t
+  ;;   :priority -1))
+  (use-package lsp-jedi
+  :ensure t)
+  ;; (lsp-register-client
+  ;;  (make-lsp-client
+  ;;   :new-connection (lsp-stdio-connection '("rust-analyzer"))
+  ;;   :activation-fn (lsp-activate-on "rust")
+  ;;   :server-id 'rust
+  ;;   :add-on? t
+  ;;   :priority -1))
+
+  ;; (lsp-register-client
+  ;;  (make-lsp-client
+  ;;   :new-connection (lsp-stdio-connection '("tsserver" "--stdio"))
+  ;;   :activation-fn (lsp-activate-on "typescript")
+  ;;   :server-id 'typescript-language-server
+  ;;   :add-on? t
+  ;;   :priority -1))
 
   ;; For whatever reason, this doesn't work properly when I try to configure it for opengl
   ;; it also doesn't recognize glsl file extensions so I have to set the file as .frag or .vert (I believe)
@@ -223,12 +247,145 @@
   ;;   :priority -1))
   )
 
+
+
+(defun tsitter-add-jsdoc ()
+  "Add JSDoc comment block above the current function."
+  (interactive)
+  (let ((func-name (tsitter-get-current-function-name)))
+	(beginning-of-defun)
+	(insert "/**\n * \n */\n")
+	(forward-line -2)
+	(end-of-line))
+  )
+
+
+
+(defun my/add-jsdoc-comment ()
+  "Add a JSDoc comment block above the current function using Tree-sitter."
+  (interactive)
+  ;; (if (not (bound-and-true-p tree-sitter-mode))
+  ;;     (user-error "Tree-sitter mode is not enabled"))
+  
+  (let* ((node (tree-sitter-node-at-point))
+         (func-node (my/find-function-node node))
+         (params nil)
+         (func-name nil))
+    
+    (unless func-node
+      (user-error "Not inside or on a function"))
+    
+    ;; Get function name and parameters
+    (setq func-name (my/get-function-name func-node))
+    (setq params (my/get-function-params func-node))
+    
+    ;; Move to the start of the function
+    (goto-char (tsc-node-start-position func-node))
+    (beginning-of-line)
+    
+    ;; Insert JSDoc comment
+    (insert "/**\n")
+    (insert " * " (or func-name "Description") "\n")
+    (insert " *\n")
+    
+    ;; Add parameter documentation
+    (dolist (param params)
+      (insert (format " * @param {*} %s - \n" param)))
+    
+    (when params
+      (insert " *\n"))
+    
+    (insert " * @returns {*}\n")
+    (insert " */\n")
+    
+    ;; Move cursor to description line
+    (forward-line -3)
+    (when params (forward-line (- (length params))))
+    (end-of-line)))
+
+(defun my/find-function-node (node)
+  "Find the function node starting from NODE."
+  (let ((current node)
+        (func-types '(function_declaration
+                      method_definition
+                      arrow_function
+                      function_expression
+                      function)))
+    (while (and current
+                (not (memq (tsc-node-type current) func-types)))
+      (setq current (tsc-get-parent current)))
+    current))
+
+(defun my/get-function-name (func-node)
+  "Extract the function name from FUNC-NODE."
+  (let* ((type (tsc-node-type func-node))
+         (name-node nil))
+    (cond
+     ;; function_declaration: function foo() {}
+     ((eq type 'function_declaration)
+      (setq name-node (tsc-get-child-by-field func-node :name)))
+     
+     ;; method_definition: class { foo() {} }
+     ((eq type 'method_definition)
+      (setq name-node (tsc-get-child-by-field func-node :name)))
+     
+     ;; For arrow functions or function expressions, try to find assignment
+     (t
+      (let ((parent (tsc-get-parent func-node)))
+        (when (eq (tsc-node-type parent) 'variable_declarator)
+          (setq name-node (tsc-get-child-by-field parent :name))))))
+    
+    (when name-node
+      (tsc-node-text name-node))))
+
+(defun my/get-function-params (func-node)
+  "Extract parameter names from FUNC-NODE."
+  (let* ((params-node (tsc-get-child-by-field func-node :parameters))
+         (params-list '()))
+    (when params-node
+      (tsc-mapc-children
+       (lambda (child)
+         (let ((child-type (tsc-node-type child)))
+           (cond
+            ;; Simple identifier: (foo)
+            ((eq child-type 'identifier)
+             (push (tsc-node-text child) params-list))
+            
+            ;; Required parameter: (foo)
+            ((eq child-type 'required_parameter)
+             (let ((pattern (tsc-get-child-by-field child :pattern)))
+               (when pattern
+                 (push (tsc-node-text pattern) params-list))))
+            
+            ;; Optional parameter: (foo?)
+            ((eq child-type 'optional_parameter)
+             (let ((pattern (tsc-get-child-by-field child :pattern)))
+               (when pattern
+                 (push (tsc-node-text pattern) params-list))))
+            
+            ;; Rest parameter: (...args)
+            ((eq child-type 'rest_pattern)
+             (let ((ident (tsc-get-nth-child child 1)))
+               (when ident
+                 (push (tsc-node-text ident) params-list)))))))
+       params-node))
+    
+    (nreverse params-list)))
+
+;; Optional: Add a keybinding
+;; (define-key tree-sitter-mode-map (kbd "C-c C-d") 'my/add-jsdoc-comment)
 (use-package lsp-java
   :ensure t
   :after lsp-mode
   :config
   (setq lsp-java-format-enabled t) ; Disable formatting, I use prettier)
 (add-hook 'java-mode-hook #'lsp))
+
+(setq lsp-json-schemas `[(:fileMatch ["tsconfig*.json"]
+                                     :url "http://json.schemastore.org/tsconfig")
+                         (:fileMatch ["package.json"]
+                                     :url "http://json.schemastore.org/package")
+                         (:fileMatch ["*.schema.json"])])
 
 
 (provide 'mg-lsp)

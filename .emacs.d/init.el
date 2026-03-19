@@ -413,9 +413,6 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-(use-package forge
-  :after magit)
-
 
 (use-package hl-todo
     :ensure t
@@ -430,13 +427,6 @@
 	  ("HACK" . "orange")
 	  ("REVIEW" . "blue")
 	  ("DEPRECATED" . "purple")))
-
-(use-package magit-todos
-  :ensure t
-  :after magit
-  :config (magit-todos-mode 1))
-
-
 
 ;; Setting pkgconf variable for pdf-tools install 
 (setenv "PKG_CONFIG_PATH" "/opt/homebrew/Cellar/poppler/25.01.0/lib/pkgconfig/:/usr/X11/lib:/pkgconfig/usr/local/Cellar/libffi/3.2.1/lib/pkgconfig:/opt/homebrew/Cellar/glib/2.82.4/lib/pkgconfig/:/opt/homebrew/Cellar/cairo/1.18.2/lib/pkgconfig/:/opt/homebrew/Cellar/libpng/1.6.46/lib/pkgconfig/:/opt/homebrew/Cellar/zlib/1.3.1/lib/pkgconfig/zlib.pc")
@@ -481,23 +471,17 @@
 ;; (setq mouse-yank-at-point t)
 (setq apropos-do-all t)
 
-;; Stop saving text that is kill into the kill ring
-;; I only want stuff I purposely copy to be saved
-;; (setq kill-transform-function (lambda (string) nil))
-
-
 ;; --------------------------------
 
 ;; Make it so that you highlight a line 
 (hl-line-mode t)
 
 ;; Go back and forward different layouts using C-c <arrows>
-(winner-mode t)
+(winner-mode t) ;; super SWEET 
+
 ;; This is just winner-mode but for tabs
 (tab-bar-history-mode t) 
-
 (smartparens-global-mode t)
-
 (yas-global-mode t)
 
 
@@ -506,58 +490,13 @@
 ;; ;; Try to get Poke working for better binary data mangling 
 ;; (add-to-list 'load-path
 ;; 	     (concat user-emacs-directory "/elpa/poke-3.2"))
-
-
 ;; Add window movement (shift + arrow keys)
 ;; (windmove-default-keybindings)
 
 
 (setq enable-recursive-minibuffers nil)
 
-
-(use-package disaster
-  :commands (disaster)
-  :ensure t
-  :init
-  ;; If you prefer viewing assembly code in `nasm-mode` instead of `asm-mode`
-  ;; (setq disaster-assembly-mode #'nasm-mode)
-  ;; :bind (:map (c++-mode-map c-mode-map disaster-mode-map)
-  ;;             ("C-c d" . #'disaster))
-  )
-(use-package forge
-  :ensure t
-  :after magit)
-
 ;; :hook ((html-mode css-mode web-mode tsx-ts-mode typescript-ts-mode js-mode svelte-mode) . lsp))
-
-
-(use-package lsp-tailwindcss
-  ;; :straight '(lsp-tailwindcss :type git :host github :repo "merrickluo/lsp-tailwindcss")
-  :init (setq lsp-tailwindcss-add-on-mode t)
-  :ensure t
-  :after lsp-mode
-  :config
-  (dolist (tw-major-mode
-           '(css-mode
-             css-ts-mode
-	     web-mode
-	     html-mode
-             typescript-mode
-             typescript-ts-mode
-             tsx-ts-mode
-             js2-mode
-             js-ts-mode
-             clojure-mode))
-    (add-to-list 'lsp-tailwindcss-major-modes tw-major-mode)))
-
-;; (dap-register-debug-template
-;;   "Debug Electron"
-;;   (list :type "node"
-;;         :request "launch"
-;;         :program "${workspaceFolder}/main.ts"
-;;         :outFiles ["${workspaceFolder}/dist/**/*.js"]
-;;         :name "Debug Server"))
-
 (require 'multiple-cursors)
 
 (use-package treemacs
@@ -677,3 +616,5 @@
 (require 'mg-lsp)
 (require 'mg-ai)
 (require 'mg-wm)
+(require 'mg-vcs)
+(require 'mg-gtd)
